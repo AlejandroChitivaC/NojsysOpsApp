@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "prueba2",
-    "slug": "prueba2",
-    "version": "1.0.0",
+    "name": "nojsysops",
+    "slug": "nojsysops",
+    "version": "TEST_1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/logo_bbic-removebg-preview.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -17,9 +17,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/logo_bbic-removebg-preview.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.bbic.nojsysapp"
     },
     "web": {
       "bundler": "metro",
@@ -31,6 +32,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "5cfdd82d-f34a-4f7e-8985-0f25cbf84908"
+      }
     }
   }
 }
