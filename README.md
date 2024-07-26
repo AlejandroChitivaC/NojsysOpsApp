@@ -85,26 +85,14 @@ POST /api/Preinspection/update/${houseNo}
 
 ## 2. Backend (Optional, depends on the project)
 
-- **REST/GraphQL APIs**: For communication with backend servers. This can be built with Node.js, Django, Ruby on Rails, etc.
+- **REST APIs**: For communication with backend servers. This can be built with Node.js, Django, Ruby on Rails, etc.
 
-- **Databases**: The app can interact with databases through the backend, such as PostgreSQL, MongoDB, Firebase, etc.
+- **Authentication and Authorization**: MSAL Authentication
 
-- **Authentication and Authorization**: Services like Firebase Authentication, Auth0, or custom implementations.
+## 3. Development Tools
 
-## 3. Third-Party Services
-
-- **Analytics**: Google Analytics, Firebase Analytics, etc., for tracking users and events.
-- **Push Notifications**: Firebase Cloud Messaging, Expo Push Notifications, etc.
-- **Maps and Geolocation**: Google Maps, Mapbox, and native geolocation APIs.
-
-## 4. Development Tools
-
-- **Expo CLI**: Command-line tool for starting, developing, and building Expo apps.
+- **Expo CLI**: Command-line tool for starting, developing, and building Expo apps. **(npm i -g expo)**
 - **Visual Studio Code**: A popular code editor with support for extensions and debugging.
 - **Git**: Version control for managing the project's source code.
 - **Jest**: For unit testing.
-- **EAS (Expo Application Services)**: For automated builds and deployments.
-
-## 5. CI/CD
-
-- **GitHub Actions, GitLab CI/CD, CircleCI, etc.**: For continuous integration and deployment.
+- **EAS (Expo Application Services)**: For automated builds and deployments. **(Account required)**
