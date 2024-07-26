@@ -1,0 +1,222 @@
+@startuml NojsysApp
+skinparam classAttributeIconSize 0
+skinparam classBorderColor black
+skinparam classBackgroundColor #f9f9f9
+skinparam packageStyle rectangle
+skinparam packageBorderColor #000000
+skinparam packageBackgroundColor #e0e0e0
+skinparam lineThickness 2
+skinparam arrowColor #000000
+skinparam classFontSize 12
+skinparam classFontColor black
+
+left to right direction
+
+package "Entities" {
+    class House {
+        - houseId: number
+        - houseNo: string
+        - statusId: number
+        - masterId: number
+        - dispatchId: number
+        - toOutline: boolean
+        - pieces: number
+        - processedPieces: number
+        - contents: string
+        - recipientName: string
+        - recipientAddress: string
+        - observations: string
+        + constructor(...)
+    }
+
+    interface ApiResponse<T> {
+        + isValid: boolean
+        + message: string
+        + dataSingle: T
+    }
+}
+
+package "Services" {
+    class StorageService {
+        + setItem(key: string, value: any): Promise<void>
+        + setHouseItem(key: string, value: House[]): Promise<void>
+        + setStringItem(key: string, value: string): Promise<void>
+        + getItem<T>(key: string): Promise<T | null>
+        + getStringItem(key: string): Promise<string | null>
+        + removeItem(key: string): Promise<void>
+    }
+
+    class MasterService {
+        - API_URL: string
+        - arraytProcessed: House[]
+        - arraytToOutline: House[]
+        - arrayBoxes: House[] | undefined
+        + initializeData(): Promise<void>
+        + loadDataToServer(guide: House): Promise<void>
+        + playSuccessSound(): Promise<void>
+        + playErrorSound(): Promise<void>
+        + masterCompleteAlert(): void
+        + showErrorAlert(message: string): void
+        + getMasterData(masterNumber: string): Promise<any>
+        + updateBoxesById(house: House): Promise<any>
+        + updateBoxToOutline(house: House): Promise<ApiResponse<House>>
+        + loadDataToServerPromise(guide: House): Promise<ApiResponse<House>>
+        + validateBox(inputValue: string): Promise<boolean>
+    }
+}
+
+package "Components" {
+    class Home {
+        - showOptions: boolean
+        - currentOption: string
+        + openLink(): void
+        + renderIcon(): string
+    }
+
+    class Preinspection {
+        - item1: House[]
+        - item2: House[]
+        - opacity: Animated.Value
+        - loading: boolean
+        - masterId: number
+        - houseNo: any
+        + redirectToScan(): void
+    }
+
+    class ScanHouses {
+        - facing: CameraType
+        - permission: CameraPermissions
+        - barcodeData: string | null
+        - sound: Audio.Sound | null
+        + handleBarCodeScanned({ type, data }: { type: string; data: string }): Promise<void>
+        + toggleCameraFacing(): void
+    }
+
+    class Auth {
+        - token: string | null
+        - discovery: DiscoveryDocument
+        - request: AuthRequest
+        - response: AuthResponse
+        - handleLogin(): void
+        + render(): JSX.Element
+    }
+
+    class SearchMaster {
+        - masterNumber: string
+        - error: string
+        - alertVisible: boolean
+        - alertMessage: string
+        - alertType: "success" | "error"
+        - searchData: any
+        - sound: Audio.Sound | null
+        - handleInputChange(text: string): void
+        - handleSearchPress(): Promise<void>
+        - showAlert(type: "success" | "error", message: string, time: number): void
+    }
+}
+
+package "Constants" {
+    class RootStackParamList {
+        + Home: undefined
+        + ScanHouses: undefined
+        + Auth: undefined
+        + Preinspection: { data: any, houseNo?: any }
+        + SearchMaster: undefined
+    }
+}
+
+package "React Hooks" as RH {
+    class useState {
+        + useState(initialState: any): [state: any, setState: Function]
+    }
+
+    class useEffect {
+        + useEffect(effect: Function, deps: Array<any>): void
+    }
+
+    class useNavigation {
+        + useNavigation(): NavigationProp
+    }
+}
+
+package "Expo Auth Session" as ExpoAuthSession {
+    class exchangeCodeAsync {
+        + exchangeCodeAsync(params: object, discovery: object): Promise<any>
+    }
+
+    class makeRedirectUri {
+        + makeRedirectUri(options: object): string
+    }
+
+    class useAuthRequest {
+        + useAuthRequest(config: object, discovery: object): [AuthRequest, AuthResponse, Function]
+    }
+
+    class useAutoDiscovery {
+        + useAutoDiscovery(issuer: string): DiscoveryDocument
+    }
+}
+
+package "React Native Components" {
+    class "React Native Components" as RNC {
+        + View
+        + Text
+        + StyleSheet
+        + ImageBackground
+        + Animated
+        + Easing
+        + TouchableOpacity
+        + Alert
+        + Dimensions
+        + SafeAreaView
+    }
+}
+
+package "Expo WebBrowser" as ExpoWebBrowser {
+    class WebBrowser {
+        + openAuthSessionAsync(url: string, redirectUrl: string): Promise<WebBrowserAuthSessionResult>
+    }
+}
+
+package "Expo Audio" {
+    class Audio {
+        + Sound
+    }
+}
+
+package "Navigation" as Navigation {
+    class App {
+        + initialRouteName: "Home"
+        + StackNavigator: Stack<RootStackParamList>
+    }
+}
+
+' Relaciones
+Navigation ..> RootStackParamList : uses
+Components ..> RootStackParamList : uses 
+Components ..> RNC : uses
+Components ..> RH : uses
+StorageService -- MasterService : uses
+MasterService ..> House : manages
+MasterService ..> ApiResponse : uses
+MasterService ..> axios : uses
+Preinspection ..> House : uses
+Preinspection ..> MasterService : uses
+ScanHouses ..> StorageService : uses
+ScanHouses ..> House : uses
+ScanHouses ..> Audio : uses
+
+Auth ..> ExpoAuthSession : uses
+Auth ..> ExpoWebBrowser : uses
+
+SearchMaster ..> StorageService : uses
+SearchMaster ..> MasterService: uses
+SearchMaster ..> Audio : uses
+
+App --> Home : navigation
+App --> ScanHouses : navigation
+App --> Preinspection : navigation
+App --> SearchMaster : navigation
+App --> Auth : navigation
+
+@enduml

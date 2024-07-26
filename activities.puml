@@ -1,0 +1,60 @@
+@startuml
+|Usuario|
+start
+:Escanear código de barras;
+:Recuperar houseNo de AsyncStorage;
+|storageService|
+:getStringItem("houseNo");
+:Retornar houseNo;
+
+|ScanHouses|
+:Validar houseNo;
+if (houseNo es válido) then (sí)
+    :Llamar masterService.validateBox(houseNo);
+    |masterService|
+    :Verificar si houseNo está en arraytProcessed o arraytToOutline;
+    if (House procesada o en preinspección?) then (sí)
+        :Mostrar alerta "Guía ya procesada" o "Enviar guía para preinspección";
+        :Reproducir sonido de error;
+        stop
+    else (no)
+        :Buscar houseNo en arrayBoxes;
+        if (House encontrada en arrayBoxes?) then (sí)
+            :Verificar estado de house y flag toOutline;
+            if (Estado es 1 o 2?) then (sí)
+                if (estado == 1) then (sí)
+                    :Mostrar alerta "Esa caja ya está procesada";
+                else (no)
+                    :Mostrar alerta "Enviar guía para preinspección";
+                endif
+                :Reproducir sonido de error;
+                stop
+            else (no)
+                if (toOutline es verdadero) then (sí)
+                    :Establecer estado a 2;
+                    :Agregar guía a lista de preinspección;
+                    :Llamar loadDataToServer con la guía;
+                else (no)
+                    :Establecer estado a 1;
+                    :Agregar guía a lista de procesadas;
+                    :Llamar loadDataToServer con la guía;
+                endif
+                :Reproducir sonido de éxito;
+                :Mostrar alerta "Guía procesada";
+                stop
+            endif
+        else (no)
+            :Mostrar alerta "Caja no existe";
+            :Reproducir sonido de error;
+            :Eliminar houseNo de AsyncStorage;
+            |storageService|
+            :removeItem("houseNo");
+            stop
+        endif
+    endif
+else (no)
+    :Mostrar alerta "Error al escanear el código";
+    :Reproducir sonido de error;
+    stop
+endif
+@enduml

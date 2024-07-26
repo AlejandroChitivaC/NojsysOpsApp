@@ -15,12 +15,7 @@ import { RootStackParamList } from "@/constants/Types";
 import { useNavigation } from "@react-navigation/native";
 import { House } from "@/app/entities/House";
 import { Audio } from "expo-av";
-// import {
-//   loadDataToServer,
-//   updateBoxToOutline,
-//   updateBoxesById,
-//   validateBox,
-// } from "@/app/services/masterService";
+
 type NavigationProp = StackNavigationProp<RootStackParamList, "Preinspection">;
 type MasterDataItem = {
   item1: House[];

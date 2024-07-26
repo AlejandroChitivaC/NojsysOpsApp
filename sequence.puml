@@ -1,0 +1,52 @@
+@startuml
+actor User
+
+participant "ScanHouses" as ScanHouses
+participant "StorageService" as StorageService
+participant "MasterService" as MasterService
+participant "Preinspection" as Preinspection
+participant "API" as API
+
+User -> ScanHouses : Scans barcode
+ScanHouses -> StorageService : setStringItem("houseNo", data)
+StorageService -> ScanHouses : success
+ScanHouses -> StorageService : getItem("masterData")
+StorageService -> ScanHouses : masterData
+ScanHouses -> StorageService : getStringItem("houseNo")
+StorageService -> ScanHouses : scannedHouse
+ScanHouses -> MasterService : getMasterData(scannedHouse)
+MasterService -> API : GET /api/Preinspection/{scannedHouse}
+API -> MasterService : masterData
+MasterService -> ScanHouses : masterData
+ScanHouses -> MasterService : loadDataToServer(guide)
+MasterService -> API : POST /api/Preinspection/update/{houseNo}
+API -> MasterService : response
+MasterService -> ScanHouses : response
+alt If house is processed
+    ScanHouses -> StorageService : setItem("houseItem", houseItem)
+    ScanHouses -> StorageService : getItem("houseItem")
+    StorageService -> ScanHouses : houseItem
+    ScanHouses -> StorageService : getItem("masterData")
+    StorageService -> ScanHouses : masterData
+    ScanHouses -> ScanHouses : showAlert("Esa guía ya fue procesada")
+    ScanHouses -> Preinspection : navigate("Preinspection", { data: masterData })
+else If house needs outlining
+    ScanHouses -> StorageService : setItem("houseItem", houseItem)
+    ScanHouses -> StorageService : getItem("houseItem")
+    StorageService -> ScanHouses : houseItem
+    ScanHouses -> StorageService : getItem("masterData")
+    StorageService -> ScanHouses : masterData
+    ScanHouses -> ScanHouses : showAlert("Enviar guía para preinspección")
+    ScanHouses -> Preinspection : navigate("Preinspection", { data: masterData })
+else If house has missing pieces
+    ScanHouses -> StorageService : setItem("houseItem", houseItem)
+    ScanHouses -> StorageService : getItem("houseItem")
+    StorageService -> ScanHouses : houseItem
+    ScanHouses -> StorageService : getItem("masterData")
+    StorageService -> ScanHouses : masterData
+    ScanHouses -> ScanHouses : showAlert("Error: guía multipieza, falta escanear piezas")
+end
+
+ScanHouses -> Preinspection : navigate("Preinspection", { data: masterData, houseNo: scannedHouse })
+
+@enduml

@@ -3,6 +3,32 @@
 
 This is an React Native [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
+
+# Table of Contents
+
+1. [Get Started](#Get-started)
+2. [Installation](#installation)
+   - [System Requirements](#system-requirements)
+   - [Setup](#setup)
+3. [Getting Started](#getting-started)
+   - [Basic Usage](#basic-usage)
+   - [Advanced Features](#advanced-features)
+4. [Configuration](#configuration)
+   - [Configuration File](#configuration-file)
+   - [Environment Variables](#environment-variables)
+5. [API Reference](#api-reference)
+   - [Endpoints](#endpoints)
+   - [Error Codes](#error-codes)
+6. [Examples](#examples)
+   - [Example 1](#example-1)
+   - [Example 2](#example-2)
+7. [FAQ](#faq)
+8. [Contributing](#contributing)
+9. [License](#license)
+10. [Contact](#contact)
+
+
+
 ## Get started
 
 1. Install dependencies, before install ensure that you have Node.js installed in the develop target machine. If it's not installed you can install it following this link. 
@@ -21,7 +47,10 @@ This is an React Native [Expo](https://expo.dev) project created with [`create-e
 When running the last command, in the process of building the application you can see a QR code that can be scanned on an IOS/Android mobile device, in order for this QR code to be read correctly it's necessary to have Expo Go installed on the mobile, you can get it in the app store of your OS. This app allows you to preview the changes in the code in real time, but keep in mind that both the machine on which it's developed and the mobile device have to be on the same network.
 
 **PLEASE NOTE THAT THIS APP WAS TESTED ONLY ON ANDROID OS.**
-*For IOS you need to run the project on  MacOs machine and then install teh pods with the following command*
+*For IOS you need to run the project on  MacOs machine and then install the pods with the following command*
+```bash
+npx pod-install
+```
 
 **This project was developed based on the official documentation of the Expo**
 
