@@ -1,13 +1,15 @@
-# Welcome to your Expo app 👋
+![BBIC Colombia](/assets/images/logo_bbic-removebg-preview.png)
+# NojsysApp Documentation
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is an React Native [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
 ## Get started
 
-1. Install dependencies
+1. Install dependencies, before install ensure that you have Node.js installed in the develop target machine. If it's not installed you can install it following this link. 
+- [NodeJS official website](https://nodejs.org/en)
 
    ```bash
-   npm install
+   npm install 
    ```
 
 2. Start the app
@@ -16,35 +18,48 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
     npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+When running the last command, in the process of building the application you can see a QR code that can be scanned on an IOS/Android mobile device, in order for this QR code to be read correctly it's necessary to have Expo Go installed on the mobile, you can get it in the app store of your OS. This app allows you to preview the changes in the code in real time, but keep in mind that both the machine on which it's developed and the mobile device have to be on the same network.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+**PLEASE NOTE THAT THIS APP WAS TESTED ONLY ON ANDROID OS.**
+*For IOS you need to run the project on  MacOs machine and then install teh pods with the following command*
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+**This project was developed based on the official documentation of the Expo**
 
-## Get a fresh project
+- [Expo documentation](https://docs.expo.dev/)
 
-When you're ready, run:
 
-```bash
-npm run reset-project
+# API Reference
+## Preinspection:
+
+#### Get the master data based on master number.
+
+```http
+GET /api/Preinspection/{masterNumber}
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `masterNumber` | `string` | **Required**. The master number |
 
-## Learn more
 
-To learn more about developing your project with Expo, look at the following resources:
+- **Responses**:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+| Code | Description | Response                |
+| :--- | :------------- | :---------------------- |
+| **200** | **`success`** |`{"isValid": true, "message": "Transacción exitosa", "dataSingle": { "item1": [...], "item2": [...] }}` |
+| **404** | **`error`** |`{"isValid": false, "message": "Error con el proveedor del servicio. Comuniquese con sistemas.", "dataSingle": null` |
 
-## Join the community
 
-Join our community of developers creating universal apps.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+#### Update Houses
+
+```http
+POST /api/Preinspection/update/${houseNo}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `houseNo`| `string` | **Required**. The number of the house that will be update |
+| `house`| `object` | **Required**. House object to update |
+
+**NOTE:** In the body of axios request you need to send a house type object, see [House](/app/entities/House.ts) for a guide of the object that the server waits
