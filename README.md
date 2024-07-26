@@ -112,7 +112,7 @@ POST /api/Preinspection/update/${houseNo}
   - **expo-camera**: For accessing the device's camera.
   - **expo-av**: For handling audio and video.
 
-## 2. Backend (Optional, depends on the project)
+## 2. Backend
 
 - **REST APIs**: For communication with backend servers. This can be built with Node.js, Django, Ruby on Rails, etc.
 
