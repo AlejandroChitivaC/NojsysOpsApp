@@ -289,7 +289,7 @@ export const getMasterData = async (masterNumber: string) => {
 // Método que actualiza cajas
 export const updateBoxesById = async (house: House): Promise<any> => {
     try {
-        const response = await axios.post(`${API_URL}/${house.houseNo}`, house, {
+        const response = await axios.post(`${API_URL}/update${house.houseNo}`, house, {
             headers: {
                 'Content-Type': 'application/json',
             },
