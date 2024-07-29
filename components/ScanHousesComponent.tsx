@@ -15,6 +15,7 @@ import { RootStackParamList } from "@/constants/Types";
 import { useNavigation } from "@react-navigation/native";
 import { House } from "@/app/entities/House";
 import { Audio } from "expo-av";
+import { validateBox } from "@/app/services/masterService";
 
 type NavigationProp = StackNavigationProp<RootStackParamList, "Preinspection">;
 type MasterDataItem = {
@@ -43,54 +44,24 @@ export default function App() {
         "masterData"
       );
       let scannedHouse = await StorageService.getStringItem("houseNo");
-      console.log("Escaneada:",scannedHouse);
+      console.log("Escaneada:", scannedHouse);
       let houseItem = masterData?.item1.find(
         (item) => item.houseNo === scannedHouse
       );
 
-
-
-      if (houseItem) { 
-      console.log("House de BD:" ,houseItem);
-      }
-      await StorageService.setItem("houseItem", houseItem);
-      let houseData = await StorageService.getItem("houseItem");
-      let matchingElement = masterData?.item1.find(
-        (item) => item.houseNo === scannedHouse
-      );
-
-      if (matchingElement !== undefined) {
-        if (
-          matchingElement.pieces > 1 &&
-          matchingElement.processedPieces < matchingElement.pieces
-        ) {
-          matchingElement.processedPieces += 1;
-
-          if (matchingElement.processedPieces !== matchingElement.pieces) {
-            return false;
-          }
-        }
-      }
-      if (0>1) {
-        Alert.alert("Oops esa guía ya fue pistoleada");
-        navigation.navigate("Preinspection", {
-          data: masterData,
-        });
-        const { sound: errorSound } = await Audio.Sound.createAsync(
-          require("@/assets/audio/error.mp3")
-        );
-        setSound(errorSound);
-        errorSound.playAsync();
-      } else {
+      if (houseItem != null && scannedHouse != null) {
+        console.log("House de BD:", houseItem);
+        validateBox(scannedHouse);
+        await StorageService.setItem("houseItem", houseItem);
         navigation.navigate("Preinspection", {
           data: masterData,
           houseNo: scannedHouse,
         });
-        const { sound: successSound } = await Audio.Sound.createAsync(
-          require("@/assets/audio/success.mp3")
-        );
-        setSound(successSound);
-        successSound.playAsync();
+      } else if (scannedHouse != null) {
+        validateBox(scannedHouse);
+        navigation.navigate("Preinspection", {
+          data: masterData,
+        });
       }
     } catch (e) {
       console.error("Error retrieving data:", e);

@@ -31,6 +31,8 @@ initializeData();
 export const loadDataToServer = async (guide: House) => {
     try {
         const success = await loadDataToServerPromise(guide);
+        console.log("VALIENDO VERGA PERO NUNCA MONDA:")
+        console.log("Server Data", success)
         const house = success.dataSingle;
         if (arraytProcessed.find((item) => item.houseId === guide.houseId || item.houseNo === guide.houseNo)) {
             await playErrorSound();
@@ -42,7 +44,7 @@ export const loadDataToServer = async (guide: House) => {
             Alert.alert('Guía procesada');
             arraytProcessed.push(guide);
             console.log("Array de Procesadas:", JSON.stringify(arraytProcessed));
-        } else if (house.toOutline && house.statusId === 2) {
+        } else if (house.toOutline == true && house.statusId === 2) {
             await playErrorSound();
             Alert.alert('Enviar guía para preinspección');
             arraytToOutline.push(guide);
@@ -73,10 +75,6 @@ const playErrorSound = async () => {
     } catch (error) {
         console.error('Error al reproducir el sonido de error:', error);
     }
-};
-
-const masterCompleteAlert = () => {
-    Alert.alert("HP");
 };
 
 const showErrorAlert = (message: string) => {
@@ -147,12 +145,13 @@ export const loadDataToServerPromise = (guide: House): Promise<ApiResponse<House
 };
 
 export const validateBox = async (inputValue: string): Promise<boolean> => {
+    console.log(inputValue)
     if (inputValue !== "") {
-        const totalItems = [...arraytProcessed, ...arraytToOutline];
-        const processed = totalItems.find(item => item.houseNo.toUpperCase() === inputValue);
+        let totalItems = [...arraytProcessed, ...arraytToOutline];
+        let processed = totalItems.find(item => item.houseNo.toUpperCase() === inputValue);
         console.log("Array total Items:", totalItems);
         if (!processed) {
-            const matchingElement = arrayBoxes?.find(item => item.houseNo.toUpperCase() === inputValue);
+            let matchingElement = arrayBoxes?.find(item => item.houseNo.toUpperCase() === inputValue);
             console.log("Array Boxes", arrayBoxes)
             if (matchingElement) {
                 if (matchingElement.statusId === 2 || matchingElement.statusId === 1) {
@@ -178,13 +177,15 @@ export const validateBox = async (inputValue: string): Promise<boolean> => {
                     await loadDataToServer(matchingElement);
                     return true;
                 }
-            } else {
+            }
+            else {
                 await playErrorSound();
                 Alert.alert('Atención', '¡Caja no existe!');
                 storageService.removeItem("")
                 return false;
             }
-        } else {
+        }
+        else {
             await playErrorSound();
             Alert.alert('Alerta', 'Esa caja fue procesada hace un momento.');
             return true;

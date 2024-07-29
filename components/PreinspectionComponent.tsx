@@ -46,11 +46,11 @@ const Preinspection: React.FC<Props> = ({ route, navigation }) => {
     }
   }, [route.params]);
 
-  useEffect(() => {
-    if (houseNo) {
-      validateBox(houseNo);
-    }
-  }, [houseNo]);
+  // useEffect(() => {
+  //   if (houseNo) {
+  //     validateBox(houseNo);
+  //   }
+  // }, [houseNo]);
 
   const tBoxes = item1.length;
   const tBoxesOutline = item1.filter((item) => item.toOutline).length;
