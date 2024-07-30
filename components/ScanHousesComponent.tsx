@@ -49,6 +49,8 @@ export default function App() {
       let masterData = await StorageService.getItem<MasterDataItem>(
         "masterData"
       );
+
+      console.log(masterData)
       let scannedHouse = await StorageService.getStringItem("houseNo");
 
       if (scannedHouse != null) {

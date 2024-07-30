@@ -36,7 +36,6 @@ const Home: React.FC<Props> = ({ navigation }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [currentOption, setCurrentOption] = useState("¿Necesita ayuda?");
 
-  StorageService.removeItem("masterData");
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentOption((prevOption) =>
