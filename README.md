@@ -1,4 +1,5 @@
 ![BBIC Colombia](/assets/images/logo_bbic-removebg-preview.png)
+
 # NojsysApp Documentation
 
 This is an React Native [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
@@ -7,27 +8,9 @@ This is an React Native [Expo](https://expo.dev) project created with [`create-e
 # Table of Contents
 
 1. [Get Started](#Get-started)
-2. [Installation](#installation)
-   - [System Requirements](#system-requirements)
-   - [Setup](#setup)
-3. [Getting Started](#getting-started)
-   - [Basic Usage](#basic-usage)
-   - [Advanced Features](#advanced-features)
-4. [Configuration](#configuration)
-   - [Configuration File](#configuration-file)
-   - [Environment Variables](#environment-variables)
-5. [API Reference](#api-reference)
-   - [Endpoints](#endpoints)
-   - [Error Codes](#error-codes)
-6. [Examples](#examples)
-   - [Example 1](#example-1)
-   - [Example 2](#example-2)
-7. [FAQ](#faq)
-8. [Contributing](#contributing)
-9. [License](#license)
-10. [Contact](#contact)
-
-
+2. [API Reference](#api-reference)
+3. [Tech Stack](#tech-stack)
+<hr>
 
 ## Get started
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CameraView, useCameraPermissions, CameraType } from "expo-camera";
 import {
   Alert,
@@ -15,18 +15,20 @@ import { RootStackParamList } from "@/constants/Types";
 import { useNavigation } from "@react-navigation/native";
 import { House } from "@/app/entities/House";
 import { Audio } from "expo-av";
-import { validateBox } from "@/app/services/masterService";
+import { getMasterData, validateBox } from "@/app/services/masterService";
 
 type NavigationProp = StackNavigationProp<RootStackParamList, "Preinspection">;
 type MasterDataItem = {
   item1: House[];
   item2: House[];
 };
+
 export default function App() {
   const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
   const [barcodeData, setBarcodeData] = useState<string | null>(null);
   const [sound, setSound] = useState<Audio.Sound | null>(null);
+  const [scanning, setScanning] = useState<boolean>(true);
   const navigation = useNavigation<NavigationProp>();
 
   const handleBarCodeScanned = async ({
@@ -36,36 +38,31 @@ export default function App() {
     type: string;
     data: string;
   }) => {
+    if (!scanning) return;
+
+    setScanning(false);
     data = data.toUpperCase();
     setBarcodeData(data);
+
     try {
       await StorageService.setStringItem("houseNo", data);
       let masterData = await StorageService.getItem<MasterDataItem>(
         "masterData"
       );
       let scannedHouse = await StorageService.getStringItem("houseNo");
-      console.log("Escaneada:", scannedHouse);
-      let houseItem = masterData?.item1.find(
-        (item) => item.houseNo === scannedHouse
-      );
 
-      if (houseItem != null && scannedHouse != null) {
-        console.log("House de BD:", houseItem);
-        validateBox(scannedHouse);
-        await StorageService.setItem("houseItem", houseItem);
+      if (scannedHouse != null) {
         navigation.navigate("Preinspection", {
           data: masterData,
           houseNo: scannedHouse,
         });
-      } else if (scannedHouse != null) {
         validateBox(scannedHouse);
-        navigation.navigate("Preinspection", {
-          data: masterData,
-        });
       }
     } catch (e) {
       console.error("Error retrieving data:", e);
     }
+
+    setTimeout(() => setScanning(true), 2000);
   };
 
   if (!permission) {

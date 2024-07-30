@@ -1,12 +1,13 @@
 import axios from "axios";
 import { House } from "../entities/House";
 import { Audio } from "expo-av";
-import { Alert } from "react-native";
+import { Alert, Modal } from "react-native";
 import storageService from "./storage/storageService";
 import { ApiResponse } from "../entities/ApiResponse";
+import useStore from "@/hooks/useGlobalStore";
 
 let API_URL = "https://nojsysweb-development.azurewebsites.net/api/Preinspection";
-// let API_URL = "https://localhost:44329/api/Preinspection";
+// let API_URL = "https://localhost:44329/api/Preinspection"; 
 
 type MasterDataItem = {
     item1: House[];
@@ -21,6 +22,7 @@ const initializeData = async () => {
     try {
         let masterData = await storageService.getItem<MasterDataItem>("masterData");
         arrayBoxes = masterData?.item1;
+        
     } catch (error) {
         console.error('Error loading master data:', error);
     }
@@ -31,23 +33,16 @@ initializeData();
 export const loadDataToServer = async (guide: House) => {
     try {
         const success = await loadDataToServerPromise(guide);
-        console.log("VALIENDO VERGA PERO NUNCA MONDA:")
-        console.log("Server Data", success)
-        const house = success.dataSingle;
-        if (arraytProcessed.find((item) => item.houseId === guide.houseId || item.houseNo === guide.houseNo)) {
-            await playErrorSound();
-            Alert.alert("Error", "Esa guía ya fue procesada");
-            return;
-        }
+        const house = success.dataSingle
         if (house.statusId === 1) {
             await playSuccessSound();
             Alert.alert('Guía procesada');
             arraytProcessed.push(guide);
-            console.log("Array de Procesadas:", JSON.stringify(arraytProcessed));
-        } else if (house.toOutline == true && house.statusId === 2) {
+        } else if (house.toOutline && house.statusId === 2) {
             await playErrorSound();
             Alert.alert('Enviar guía para preinspección');
             arraytToOutline.push(guide);
+
         } else if (house.statusId === 0 && house.pieces > house.processedPieces) {
             await playErrorSound();
             Alert.alert('Error', `Esa guía es multipieza, aún falta ${house.pieces - house.processedPieces} de ${house.pieces} piezas por escanear.`);
@@ -145,36 +140,36 @@ export const loadDataToServerPromise = (guide: House): Promise<ApiResponse<House
 };
 
 export const validateBox = async (inputValue: string): Promise<boolean> => {
-    console.log(inputValue)
+    const { setTBoxes, setTBoxesOutline, setTBoxesStatusProcessed, setTBoxesStatusOutline, setTBoxesMissing, setTHousesToOutline, setTHousesInOutline } = useStore.getState();
     if (inputValue !== "") {
-        let totalItems = [...arraytProcessed, ...arraytToOutline];
-        let processed = totalItems.find(item => item.houseNo.toUpperCase() === inputValue);
-        console.log("Array total Items:", totalItems);
-        if (!processed) {
-            let matchingElement = arrayBoxes?.find(item => item.houseNo.toUpperCase() === inputValue);
-            console.log("Array Boxes", arrayBoxes)
-            if (matchingElement) {
-                if (matchingElement.statusId === 2 || matchingElement.statusId === 1) {
-                    if (matchingElement.statusId === 1) {
-                        await playErrorSound();
+        let totalItems = arraytProcessed.concat(arraytToOutline);
+        let processed = totalItems.find(item => item.houseNo.toUpperCase() == inputValue);
+        if (processed == undefined) {
+            let matchingElement = arrayBoxes?.find(item => item.houseNo.toUpperCase() == inputValue);
+            if (matchingElement != undefined) {
+                if (matchingElement.statusId == 2 || matchingElement.statusId == 1) {
+                    if (matchingElement.statusId == 1) {
                         Alert.alert('Alerta', 'Esa caja ya está procesada.');
                     }
-
-                    if (matchingElement.statusId === 2) {
-                        await playErrorSound();
+                    if (matchingElement.statusId == 2) {
                         Alert.alert('Alerta', 'Esa caja ya está procesada, pero debe enviarla para preinspección.');
                     }
-
+                    await playErrorSound();
                     return false;
-
                 } else if (matchingElement.toOutline) {
                     matchingElement.statusId = 2;
                     await loadDataToServer(matchingElement);
+                    useStore.setState(prevState => ({
+                        tBoxesStatusOutline: prevState.tBoxesStatusOutline + 1
+                    }));
                     return true;
-
                 } else {
                     matchingElement.statusId = 1;
                     await loadDataToServer(matchingElement);
+                    useStore.setState(prevState => ({
+                        tBoxesMissing: prevState.tBoxesMissing - 1,
+                        tBoxesStatusProcessed: prevState.tBoxesStatusProcessed + 1
+                    }));
                     return true;
                 }
             }

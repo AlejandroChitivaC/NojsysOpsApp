@@ -14,7 +14,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import IconMaterialCE from "react-native-vector-icons/MaterialCommunityIcons";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../constants/Types";
-
+import StorageService from "@/app/services/storage/storageService";
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 type Props = {
   navigation: HomeScreenNavigationProp;
@@ -36,6 +36,7 @@ const Home: React.FC<Props> = ({ navigation }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [currentOption, setCurrentOption] = useState("¿Necesita ayuda?");
 
+  StorageService.removeItem("masterData");
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentOption((prevOption) =>
@@ -63,7 +64,10 @@ const Home: React.FC<Props> = ({ navigation }) => {
         />
       </View>
       <ScrollView contentContainerStyle={styles.content}>
-        <TouchableOpacity style={styles.card} onPress={()=>navigation.navigate("SearchMaster")}>
+        <TouchableOpacity
+          style={styles.card}
+          onPress={() => navigation.navigate("SearchMaster")}
+        >
           <Icon style={styles.icon} name="eye" size={60} />
           <Text style={styles.cardText}>Preinspección Mercancía</Text>
         </TouchableOpacity>

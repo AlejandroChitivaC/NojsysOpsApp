@@ -14,7 +14,6 @@ const setItem = async (key: string, value: any): Promise<void> => {
 const setHouseItem = async (key: string, value: House[]): Promise<void> => {
     try {
         let data = JSON.stringify(value);
-        console.log(data)
         await AsyncStorage.setItem(key,data);
     } catch (e) {
         console.error("Error")
