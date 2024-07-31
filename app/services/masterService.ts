@@ -40,9 +40,8 @@ export const loadDataToServer = async (guide: House) => {
             // Alert.alert('Guía procesada');
             showAlert("Guía procesada", "success");
             arraytProcessed.push(guide);
-        } else if (house.toOutline == true && house.statusId === 2) {
+        } else if (house.toOutline && house.statusId === 2) {
             await playErrorSound();
-            // Alert.alert('Enviar guía para preinspección');
             showAlert("Enviar guía para preinspección", "warning")
             arraytToOutline.push(guide);
 
@@ -144,15 +143,27 @@ export const loadDataToServerPromise = (guide: House): Promise<ApiResponse<House
 };
 
 export const validateBox = async (inputValue: string): Promise<boolean> => {
-    const { setTBoxes, setTBoxesOutline, setTBoxesStatusProcessed, setTBoxesStatusOutline, setTBoxesMissing, setTHousesToOutline, setTHousesInOutline } = useStore.getState();
-    if (inputValue !== "") {
-        let totalItems = arraytProcessed.concat(arraytToOutline);
-        let processed = totalItems.find(item => item.houseNo.toUpperCase() == inputValue);
-        if (processed == undefined) {
-            
-            let matchingElement = arrayBoxes?.find(item => item.houseNo.toUpperCase() == inputValue);
+    const {
+        setTBoxes,
+        setTBoxesOutline,
+        setTBoxesStatusProcessed,
+        setTBoxesStatusOutline,
+        setTBoxesMissing,
+        setTHousesToOutline,
+        setTHousesInOutline
+    } = useStore.getState();
 
-            if (matchingElement != undefined) {
+    if (inputValue.trim() !== "") {
+        // Normalizamos inputValue eliminando espacios y convirtiendo a mayúsculas
+        inputValue = inputValue.trim().toUpperCase();
+
+        let totalItems = arraytProcessed.concat(arraytToOutline);
+        let processed = totalItems.find(item => item.houseNo.toUpperCase().trim() === inputValue);
+
+        if (processed === undefined) {
+            let matchingElement = arrayBoxes?.find(item => item.houseNo.toUpperCase().trim() === inputValue);
+
+            if (matchingElement !== undefined) {
                 if (matchingElement.statusId === 2 || matchingElement.statusId === 1) {
                     if (matchingElement.statusId === 1) {
                         showAlert("Esa caja ya está procesada", "warning");
@@ -166,7 +177,8 @@ export const validateBox = async (inputValue: string): Promise<boolean> => {
                     await loadDataToServer(matchingElement);
                     useStore.setState(prevState => ({
                         tBoxesStatusOutline: prevState.tBoxesStatusOutline + 1,
-                        tHousesInOutline: prevState.tHousesInOutline + 1
+                        tHousesInOutline: prevState.tHousesInOutline + 1,
+                        tBoxesMissing: prevState.tBoxesMissing - 1
                     }));
                     return true;
                 } else {
@@ -178,17 +190,14 @@ export const validateBox = async (inputValue: string): Promise<boolean> => {
                     }));
                     return true;
                 }
-            }
-            else {
+            } else {
                 await playErrorSound();
-                showAlert("Caja no existe!", "error")
-                // storageService.removeItem("")
+                showAlert("Caja no existe!", "error");
                 return false;
             }
-        }
-        else {
+        } else {
             await playErrorSound();
-            showAlert("Esa caja fue procesada hace un momento!", "error")
+            showAlert("Esa caja fue procesada hace un momento!", "error");
             return true;
         }
     }
