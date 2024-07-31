@@ -104,7 +104,6 @@ POST /api/Preinspection/update/${houseNo}
 ## 3. Development Tools
 
 - **Expo CLI**: Command-line tool for starting, developing, and building Expo apps. **(npm i -g expo)**
-- **Visual Studio Code**: A popular code editor with support for extensions and debugging.
-- **Git**: Version control for managing the project's source code.
-- **Jest**: For unit testing.
+- **Visual Studio Code**
+- **Git**
 - **EAS (Expo Application Services)**: For automated builds and deployments. **(Account required)**
