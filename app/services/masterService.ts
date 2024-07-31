@@ -149,7 +149,7 @@ export const validateBox = async (inputValue: string): Promise<boolean> => {
         let totalItems = arraytProcessed.concat(arraytToOutline);
         let processed = totalItems.find(item => item.houseNo.toUpperCase() == inputValue);
         if (processed == undefined) {
-            console.log(arrayBoxes)
+            
             let matchingElement = arrayBoxes?.find(item => item.houseNo.toUpperCase() == inputValue);
 
             if (matchingElement != undefined) {
