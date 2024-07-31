@@ -69,9 +69,7 @@ const SearchMaster: React.FC<Props> = ({ navigation }) => {
         if (data.isValid && data.dataSingle != null) {
           showAlert("success", data.message, 1000);
           setSearchData(data.dataSingle);
-          // StorageService.removeItem("masterData");
-          StorageService.setItem("masterNumber", masterNumber);
-          StorageService.setItem("masterData", data.dataSingle);
+          await StorageService.setItem("masterData",data.dataSingle);
           navigation.navigate("Preinspection", { data: data.dataSingle });
         } else if (data.isValid === false || data.dataSingle === null) {
           const { sound: newSound } = await Audio.Sound.createAsync(

@@ -1,10 +1,11 @@
 import axios from "axios";
 import { House } from "../entities/House";
 import { Audio } from "expo-av";
-import { Alert, Modal } from "react-native";
+import { Alert, Modal, ToastAndroid } from "react-native";
 import storageService from "./storage/storageService";
 import { ApiResponse } from "../entities/ApiResponse";
 import useStore from "@/hooks/useGlobalStore";
+import { showAlert } from "./alertService";
 
 let API_URL = "https://nojsysweb-development.azurewebsites.net/api/Preinspection";
 // let API_URL = "https://localhost:44329/api/Preinspection"; 
@@ -22,7 +23,7 @@ const initializeData = async () => {
     try {
         let masterData = await storageService.getItem<MasterDataItem>("masterData");
         arrayBoxes = masterData?.item1;
-        
+
     } catch (error) {
         console.error('Error loading master data:', error);
     }
@@ -36,11 +37,13 @@ export const loadDataToServer = async (guide: House) => {
         const house = success.dataSingle
         if (house.statusId === 1) {
             await playSuccessSound();
-            Alert.alert('Guía procesada');
+            // Alert.alert('Guía procesada');
+            showAlert("Guía procesada", "success");
             arraytProcessed.push(guide);
-        } else if (house.toOutline && house.statusId === 2) {
+        } else if (house.toOutline == true && house.statusId === 2) {
             await playErrorSound();
-            Alert.alert('Enviar guía para preinspección');
+            // Alert.alert('Enviar guía para preinspección');
+            showAlert("Enviar guía para preinspección", "warning")
             arraytToOutline.push(guide);
 
         } else if (house.statusId === 0 && house.pieces > house.processedPieces) {
@@ -80,6 +83,7 @@ const showErrorAlert = (message: string) => {
 export const getMasterData = async (masterNumber: string) => {
     try {
         const response = await axios.get(`${API_URL}/${masterNumber}`);
+        await storageService.removeItem("masterData");
         return response.data;
     } catch (error) {
         console.error(error);
@@ -147,13 +151,13 @@ export const validateBox = async (inputValue: string): Promise<boolean> => {
         if (processed == undefined) {
             console.log(arrayBoxes)
             let matchingElement = arrayBoxes?.find(item => item.houseNo.toUpperCase() == inputValue);
+
             if (matchingElement != undefined) {
-                if (matchingElement.statusId == 2 || matchingElement.statusId == 1) {
-                    if (matchingElement.statusId == 1) {
-                        Alert.alert('Alerta', 'Esa caja ya está procesada.');
-                    }
-                    if (matchingElement.statusId == 2) {
-                        Alert.alert('Alerta', 'Esa caja ya está procesada, pero debe enviarla para preinspección.');
+                if (matchingElement.statusId === 2 || matchingElement.statusId === 1) {
+                    if (matchingElement.statusId === 1) {
+                        showAlert("Esa caja ya está procesada", "warning");
+                    } else if (matchingElement.statusId === 2) {
+                        showAlert("Esa caja ya está procesada, pero debe enviarla para preinspección", "warning");
                     }
                     await playErrorSound();
                     return false;
@@ -161,7 +165,8 @@ export const validateBox = async (inputValue: string): Promise<boolean> => {
                     matchingElement.statusId = 2;
                     await loadDataToServer(matchingElement);
                     useStore.setState(prevState => ({
-                        tBoxesStatusOutline: prevState.tBoxesStatusOutline + 1
+                        tBoxesStatusOutline: prevState.tBoxesStatusOutline + 1,
+                        tHousesInOutline: prevState.tHousesInOutline + 1
                     }));
                     return true;
                 } else {
@@ -176,14 +181,14 @@ export const validateBox = async (inputValue: string): Promise<boolean> => {
             }
             else {
                 await playErrorSound();
-                Alert.alert('Atención', '¡Caja no existe!');
-                storageService.removeItem("")
+                showAlert("Caja no existe!", "error")
+                // storageService.removeItem("")
                 return false;
             }
         }
         else {
             await playErrorSound();
-            Alert.alert('Alerta', 'Esa caja fue procesada hace un momento.');
+            showAlert("Esa caja fue procesada hace un momento!", "error")
             return true;
         }
     }
