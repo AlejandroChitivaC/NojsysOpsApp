@@ -28,6 +28,9 @@ const initializeData = async () => {
         console.error('Error loading master data:', error);
     }
 };
+
+initializeData();
+
 export const loadDataToServer = async (guide: House) => {
     try {
         const success = await loadDataToServerPromise(guide);
@@ -79,7 +82,7 @@ const showErrorAlert = (message: string) => {
 export const getMasterData = async (masterNumber: string) => {
     try {
         const response = await axios.get(`${API_URL}/${masterNumber}`);
-        initializeData();
+        // initializeData();
         await storageService.removeItem("masterData");
         return response.data;
     } catch (error) {
@@ -146,7 +149,7 @@ export const validateBox = async (inputValue: string): Promise<boolean> => {
         let totalItems = arraytProcessed.concat(arraytToOutline);
         let processed = totalItems.find(item => item.houseNo.toUpperCase() == inputValue);
         if (processed == undefined) {
-            console.log(arrayBoxes)
+
             let matchingElement = arrayBoxes?.find(item => item.houseNo.toUpperCase() == inputValue);
 
             if (matchingElement != undefined) {
