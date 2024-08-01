@@ -62,7 +62,7 @@ export default function App() {
       console.error("Error retrieving data:", e);
     }
 
-    setTimeout(() => setScanning(true), 2000);
+    setTimeout(() => setScanning(true), 1500);
   };
 
   if (!permission) {

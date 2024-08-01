@@ -19,17 +19,16 @@ const arraytProcessed: House[] = [];
 const arraytToOutline: House[] = [];
 let arrayBoxes: House[] | undefined;
 
-const initializeData = async () => {
+export const initializeData = async () => {
     try {
         let masterData = await storageService.getItem<MasterDataItem>("masterData");
         arrayBoxes = masterData?.item1;
-
     } catch (error) {
         console.error('Error loading master data:', error);
     }
 };
 
-initializeData();
+
 
 export const loadDataToServer = async (guide: House) => {
     try {
@@ -37,7 +36,6 @@ export const loadDataToServer = async (guide: House) => {
         const house = success.dataSingle
         if (house.statusId === 1) {
             await playSuccessSound();
-            // Alert.alert('Guía procesada');
             showAlert("Guía procesada", "success");
             arraytProcessed.push(guide);
         } else if (house.toOutline && house.statusId === 2) {
@@ -82,7 +80,6 @@ const showErrorAlert = (message: string) => {
 export const getMasterData = async (masterNumber: string) => {
     try {
         const response = await axios.get(`${API_URL}/${masterNumber}`);
-        // initializeData();
         await storageService.removeItem("masterData");
         return response.data;
     } catch (error) {

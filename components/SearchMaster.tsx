@@ -11,7 +11,7 @@ import {
   Modal,
   ImageBackground,
 } from "react-native";
-import { getMasterData } from "@/app/services/masterService";
+import { getMasterData, initializeData } from "@/app/services/masterService";
 import { Audio } from "expo-av";
 import Icon from "@expo/vector-icons/FontAwesome";
 import StorageService from "@/app/services/storage/storageService";
@@ -69,7 +69,8 @@ const SearchMaster: React.FC<Props> = ({ navigation }) => {
         if (data.isValid && data.dataSingle != null) {
           showAlert("success", data.message, 1000);
           setSearchData(data.dataSingle);
-          await StorageService.setItem("masterData",data.dataSingle);
+          await StorageService.setItem("masterData", data.dataSingle);
+          initializeData();
           navigation.navigate("Preinspection", { data: data.dataSingle });
         } else if (data.isValid === false || data.dataSingle === null) {
           const { sound: newSound } = await Audio.Sound.createAsync(
