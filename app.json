@@ -2,7 +2,7 @@
   "expo": {
     "name": "Nojsys Ops",
     "slug": "nojsysops",
-    "version": "STABLE_1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/logo_bbic.png",
     "scheme": "myapp",
@@ -20,7 +20,8 @@
         "foregroundImage": "./assets/images/logo_bbic.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.bbic.nojsysapp"
+      "package": "com.bbic.nojsysapp",
+      "versionCode": 2
     },
     "web": {
       "bundler": "metro",

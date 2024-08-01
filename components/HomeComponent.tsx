@@ -15,6 +15,7 @@ import IconMaterialCE from "react-native-vector-icons/MaterialCommunityIcons";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../constants/Types";
 import StorageService from "@/app/services/storage/storageService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 type Props = {
   navigation: HomeScreenNavigationProp;
@@ -37,6 +38,7 @@ const Home: React.FC<Props> = ({ navigation }) => {
   const [currentOption, setCurrentOption] = useState("¿Necesita ayuda?");
 
   useEffect(() => {
+    AsyncStorage.clear();
     const interval = setInterval(() => {
       setCurrentOption((prevOption) =>
         prevOption === "¿Necesita ayuda?" ? "Cerrar Sesión" : "¿Necesita ayuda?"
