@@ -3,5 +3,6 @@ export type RootStackParamList = {
   ScanHouses: undefined;
   Auth: undefined;
   Preinspection: {data:any, houseNo?:any};
-  SearchMaster:undefined;
+  SearchMaster: undefined;
+  HouseDetails: undefined;
 };

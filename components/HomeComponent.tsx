@@ -74,10 +74,10 @@ const Home: React.FC<Props> = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.card}
-          onPress={() => navigation.navigate("ScanHouses")}
+          onPress={() => navigation.navigate("HouseDetails")}
         >
-          <Icon style={styles.icon} name="qr-code" size={60} />
-          <Text style={styles.cardText}>Escanear Guía</Text>
+          <IconMaterialCE style={styles.icon} name="account-details" size={60} />
+          <Text style={styles.cardText}>Detalles Guía</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.card}>
           <IconMaterialCE

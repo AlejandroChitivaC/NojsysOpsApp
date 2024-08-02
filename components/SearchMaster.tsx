@@ -39,7 +39,7 @@ const SearchMaster: React.FC<Props> = ({ navigation }) => {
       setError("El campo no puede estar vacío.");
     } else if (!/^[a-zA-Z0-9\s._-]+$/.test(text)) {
       setError(
-        "El número de máster debe contener solo letras, números, espacios y puntos."
+        "El número de máster debe contener solo letras, números, espacios y -."
       );
     } else {
       setError("");

@@ -1,0 +1,23 @@
+import axios from 'axios';
+import { House } from '@/app/entities/House';
+import { showAlert } from './alertService';
+import { ApiResponse } from '@/app/entities/ApiResponse';
+import { HouseDetail } from '@/app/entities/HouseDetail';
+
+const API_URL = "https://nojsysweb-development.azurewebsites.net/api/Preinspection/houses/details";
+
+export const fetchHouseDetails = async (houseNo: string): Promise<HouseDetail | null> => {
+    try {
+        const response = await axios.get<ApiResponse<HouseDetail>>(`${API_URL}/${houseNo}`);
+        if (response.data.isValid && response.data.dataSingle) {
+            console.log(response.data.dataSingle);
+            return response.data.dataSingle;
+        } else {
+            showAlert("No se encontró la información de la guía.", "error");
+            return null;
+        }
+    } catch (error) {
+        showAlert("Ocurrió un error al traer la información de la guía.", "error");
+        return null;
+    }
+};

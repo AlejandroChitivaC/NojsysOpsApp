@@ -8,6 +8,7 @@ import Preinspection from "@/components/PreinspectionComponent";
 import SearchMaster from "@/components/SearchMaster";
 import { AlertProvider, useAlert } from "@/components/AlertContext";
 import { setAlertFunction } from "@/app/services/alertService";
+import HouseDetails from "@/components/HouseDetails";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -44,6 +45,11 @@ const MainNavigator = () => {
         name="SearchMaster"
         options={{ title: "Buscar Master" }}
         component={SearchMaster}
+      />
+      <Stack.Screen
+        name="HouseDetails"
+        options={{ title: "Detalles de la guía" }}
+        component={HouseDetails}
       />
     </Stack.Navigator>
   );
