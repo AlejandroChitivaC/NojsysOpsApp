@@ -6,10 +6,8 @@ import storageService from "./storage/storageService";
 import { ApiResponse } from "../entities/ApiResponse";
 import useStore from "@/hooks/useGlobalStore";
 import { showAlert } from "./alertService";
-
-let API_URL = "https://nojsysweb-development.azurewebsites.net/api/Preinspection";
-// let API_URL = "https://localhost:44329/api/Preinspection"; 
-
+const { EXPO_PUBLIC_API_URL } = process.env;
+console.log(EXPO_PUBLIC_API_URL);
 type MasterDataItem = {
     item1: House[];
     item2: House[];
@@ -79,7 +77,7 @@ const showErrorAlert = (message: string) => {
 // Método que trae la información de una master
 export const getMasterData = async (masterNumber: string) => {
     try {
-        const response = await axios.get(`${API_URL}/${masterNumber}`);
+        const response = await axios.get(`${EXPO_PUBLIC_API_URL}/${masterNumber}`);
         await storageService.removeItem("masterData");
         return response.data;
     } catch (error) {
@@ -91,7 +89,7 @@ export const getMasterData = async (masterNumber: string) => {
 // Método que actualiza cajas
 export const updateBoxesById = async (house: House): Promise<any> => {
     try {
-        const response = await axios.post(`${API_URL}/update${house.houseNo}`, house, {
+        const response = await axios.post(`${EXPO_PUBLIC_API_URL}/update${house.houseNo}`, house, {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -111,7 +109,7 @@ export const updateBoxesById = async (house: House): Promise<any> => {
 // Método que actualiza una caja a "Outline"
 export const updateBoxToOutline = async (house: House): Promise<ApiResponse<House>> => {
     try {
-        const response = await axios.post<ApiResponse<House>>(`${API_URL}/update/box/${house.houseNo}`, house, {
+        const response = await axios.post<ApiResponse<House>>(`${EXPO_PUBLIC_API_URL}/update/box/${house.houseNo}`, house, {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -129,7 +127,7 @@ export const updateBoxToOutline = async (house: House): Promise<ApiResponse<Hous
 };
 
 export const loadDataToServerPromise = (guide: House): Promise<ApiResponse<House>> => {
-    return axios.post<ApiResponse<House>>(`${API_URL}/update/${guide.houseNo}`, guide, {
+    return axios.post<ApiResponse<House>>(`${EXPO_PUBLIC_API_URL}/update/${guide.houseNo}`, guide, {
         headers: {
             'Content-Type': 'application/json',
         },

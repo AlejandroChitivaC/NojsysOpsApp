@@ -1,11 +1,11 @@
-import * as React from 'react';
-import * as WebBrowser from 'expo-web-browser';
+import * as React from "react";
+import * as WebBrowser from "expo-web-browser";
 import {
   exchangeCodeAsync,
   makeRedirectUri,
   useAuthRequest,
   useAutoDiscovery,
-} from 'expo-auth-session';
+} from "expo-auth-session";
 import {
   View,
   Text,
@@ -23,6 +23,7 @@ import { useNavigation } from "@react-navigation/native";
 import { HelloWave } from "../HelloWave";
 import { RootStackParamList } from "@/constants/Types";
 import { StackNavigationProp } from "@react-navigation/stack";
+const { EXPO_PUBLIC_CLIENT_ID, EXPO_PUBLIC_AUTH_URL } = process.env;
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -32,29 +33,28 @@ const Auth: React.FC = () => {
   const navigation = useNavigation<AuthScreenNavigationProp>();
   const [token, setToken] = React.useState<string | null>(null);
 
-  const discovery = useAutoDiscovery(
-    'https://login.microsoftonline.com/baf45ae8-5f41-443c-9c28-83135da3744d',
-  );
-
+  const discovery = useAutoDiscovery(`${EXPO_PUBLIC_AUTH_URL}`);
+  console.log("AUTH_URL:", EXPO_PUBLIC_AUTH_URL);
+  console.log("CLIENT_ID:", EXPO_PUBLIC_CLIENT_ID);
   const redirectUri = makeRedirectUri({
     scheme: undefined,
-    path: '/signin-oidc',
+    path: "/signin-oidc",
   });
 
-  const clientId = '3c795922-ee42-4cad-b299-57c2a61621e9';
+  const clientId = `${EXPO_PUBLIC_CLIENT_ID}`;
 
   const [request, response, promptAsync] = useAuthRequest(
     {
       clientId,
-      scopes: ['openid', 'profile', 'email', 'offline_access'],
+      scopes: ["openid", "profile", "email", "offline_access"],
       redirectUri,
     },
-    discovery,
+    discovery
   );
 
   const handleLogin = () => {
     promptAsync().then((codeResponse) => {
-      if (request && codeResponse?.type === 'success' && discovery) {
+      if (request && codeResponse?.type === "success" && discovery) {
         exchangeCodeAsync(
           {
             clientId,
@@ -64,11 +64,14 @@ const Auth: React.FC = () => {
               : undefined,
             redirectUri,
           },
-          discovery,
+          discovery
         ).then((res) => {
           console.log(res);
           setToken(res.accessToken);
-          Alert.alert("Autenticación exitosa", "¡Has iniciado sesión correctamente!");
+          Alert.alert(
+            "Autenticación exitosa",
+            "¡Has iniciado sesión correctamente!"
+          );
         });
       }
     });
@@ -100,47 +103,47 @@ const Auth: React.FC = () => {
       resizeMode="cover"
     >
       <View style={styles.overlay}>
-          <Animated.View
-            style={{ opacity: fadeIn, alignItems: "center", flex: 1 }}
-          >
-            <Animated.View style={[styles.header, { opacity: logoOpacity }]}>
-              <Animated.Image
-                source={require("@/assets/images/logo_bbic-removebg-preview.png")}
-                style={[styles.logo, { opacity: logoOpacity }]}
-              />
-            </Animated.View>
-            <View style={styles.body}>
-              <Text style={styles.title}>
-                NojsysOps App <HelloWave />{" "}
-              </Text>
-              <Animated.Text style={[styles.subtitle, { opacity: fadeIn }]}>
-                Gestión Operativa Eficiente
-              </Animated.Text>
-              <TouchableOpacity
-                style={styles.microsoftButton}
-                onPress={handleLogin}
-                disabled={!request}
-              >
-                <Icon
-                  name="logo-microsoft"
-                  size={25}
-                  color="#fff"
-                  style={styles.microsoftLogo}
-                />
-                <Text style={styles.microsoftButtonText}>
-                  Iniciar sesión con Microsoft
-                </Text>
-              </TouchableOpacity>
-              {token && <Text style={styles.tokenText}>{token}</Text>}
-            </View>
-            <View style={styles.footer}>
-              <Text style={styles.footerText}>¿Necesitas ayuda?</Text>
-              <TouchableOpacity>
-                <Icon name="chatbubble-ellipses" size={24} color="#fff" />
-              </TouchableOpacity>
-            </View>
+        <Animated.View
+          style={{ opacity: fadeIn, alignItems: "center", flex: 1 }}
+        >
+          <Animated.View style={[styles.header, { opacity: logoOpacity }]}>
+            <Animated.Image
+              source={require("@/assets/images/logo_bbic-removebg-preview.png")}
+              style={[styles.logo, { opacity: logoOpacity }]}
+            />
           </Animated.View>
-        </View>
+          <View style={styles.body}>
+            <Text style={styles.title}>
+              NojsysOps App <HelloWave />{" "}
+            </Text>
+            <Animated.Text style={[styles.subtitle, { opacity: fadeIn }]}>
+              Gestión Operativa Eficiente
+            </Animated.Text>
+            <TouchableOpacity
+              style={styles.microsoftButton}
+              onPress={handleLogin}
+              disabled={!request}
+            >
+              <Icon
+                name="logo-microsoft"
+                size={25}
+                color="#fff"
+                style={styles.microsoftLogo}
+              />
+              <Text style={styles.microsoftButtonText}>
+                Iniciar sesión con Microsoft
+              </Text>
+            </TouchableOpacity>
+            {token && <Text style={styles.tokenText}>{token}</Text>}
+          </View>
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>¿Necesitas ayuda?</Text>
+            <TouchableOpacity>
+              <Icon name="chatbubble-ellipses" size={24} color="#fff" />
+            </TouchableOpacity>
+          </View>
+        </Animated.View>
+      </View>
     </ImageBackground>
   );
 };
