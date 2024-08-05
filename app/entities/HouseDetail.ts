@@ -1,4 +1,4 @@
-import { Master } from "./Master";
+import { Master } from "@/app/entities/Master";
 
 export interface HouseDetail {
     houseId: number;

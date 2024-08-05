@@ -1,4 +1,4 @@
-import { Client } from "./Client";
+import { Client } from "@/app/entities/Client";
 
 export class Master {
     masterId: number;
