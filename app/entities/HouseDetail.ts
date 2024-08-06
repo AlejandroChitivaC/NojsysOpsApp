@@ -52,4 +52,5 @@ export interface HouseDetail {
     dispatchId?: number;
     entryManifest?: []; 
     master?: Master; 
+    masterNumber: string;
 }

@@ -7,12 +7,13 @@ import {
   ImageBackground,
   Modal,
   TextInput,
+  ScrollView,
 } from "react-native";
 import { fetchHouseDetails } from "@/app/services/houseDetailsService";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@/constants/Types";
 import { Wave } from "react-native-animated-spinkit";
-import { Button } from "@rneui/base";
+import { Button, Card, Icon } from "@rneui/base";
 import { HouseDetail } from "@/app/entities/HouseDetail";
 
 type HouseDetailsScreenNavProps = StackNavigationProp<
@@ -41,9 +42,11 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
             setHouseData(data);
             setError(null);
           } else {
+            navigation.goBack();
             setError("No data found");
           }
         } catch (err) {
+          navigation.goBack();
           setError("Error fetching house details");
           setHouseData(null);
         } finally {
@@ -54,28 +57,6 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
       getHouseDetails();
     }
   }, [modalVisible, houseNo]);
-
-  const filteredData = houseData
-    ? {
-        "# Máster": houseData.master?.masterNumber ?? "No Disponible",
-        "# Guía": houseData.houseNo ?? "No Disponible",
-        "Fecha Creación": houseData.dateCreation ?? "No Disponible",
-        "Nombre Remitente": houseData.senderName ?? "No Disponible",
-        "Ciudad Remitente": houseData.senderCity ?? "No Disponible",
-        "Estado Remitente": houseData.senderState ?? "No Disponible",
-        "País Remitente": houseData.senderCountry ?? "No Disponible",
-        "Nombre Destinatario": houseData.recipientName ?? "No Disponible",
-        "Ciudad Destinatario": houseData.recipientCity ?? "No Disponible",
-        "Estado Destinatario": houseData.recipientState ?? "No Disponible",
-        "País Destinatario": houseData.recipientCountry ?? "No Disponible",
-        "Cliente": houseData.master?.client.name ?? "No Disponible",
-      }
-    : {};
-
-  const tableData = Object.entries(filteredData).map(([key, value]) => ({
-    key,
-    value,
-  }));
 
   return (
     <View style={styles.container}>
@@ -106,24 +87,20 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
               icon={{
                 name: "search",
                 type: "material-icons",
-                size: 40,
+                size: 30,
                 color: "white",
               }}
-              buttonStyle={{
-                borderRadius: 50,
-                width: 150,
-                marginTop: 15,
-              }}
+              buttonStyle={styles.searchButton}
             />
             <Button
-              title="Atrás"
-              onPress={() => navigation.goBack()}
-              buttonStyle={{
-                borderRadius: 50,
-                width: 150,
-                marginTop: 15,
-                backgroundColor: "#d9534f",
+              icon={{
+                name: "arrow-back-circle",
+                type: "ionicon",
+                size: 30,
+                color: "white",
               }}
+              onPress={() => navigation.goBack()}
+              buttonStyle={styles.backButton}
             />
           </View>
         </View>
@@ -138,22 +115,89 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
       ) : error ? (
         <Text style={styles.errorText}>{error}</Text>
       ) : (
-        <View style={styles.tableContainer}>
-          {tableData.length > 0 ? (
-            <FlatList
-              data={tableData}
-              keyExtractor={(item) => item.key}
-              renderItem={({ item }) => (
-                <View style={styles.row}>
-                  <Text style={styles.key}>{item.key}:</Text>
-                  <Text style={styles.value}>{item.value}</Text>
-                </View>
-              )}
-            />
-          ) : (
-            <Text>No data available</Text>
-          )}
-        </View>
+        <ScrollView contentContainerStyle={styles.cardsContainer}>
+          <Card containerStyle={styles.card}>
+            <Card.Title style={{ color: "#318d8c" }}>
+              {houseData?.houseNo ?? "No Disponible"}
+            </Card.Title>
+            <Card.Divider />
+            <View style={styles.row}>
+              <Icon name="home" type="font-awesome" color="#318d8c" />
+              <Text style={styles.value}>
+                {" "}
+                <Text style={{ fontWeight: "bold" }}> # Máster:</Text>{" "}
+                {houseData?.masterNumber ?? "No Disponible"}
+              </Text>
+            </View>
+          </Card>
+          <Card containerStyle={styles.card}>
+            <Card.Title style={{ color: "#318d8c" }}>Remitente</Card.Title>
+            <Card.Divider />
+            <View style={styles.row}>
+              <Icon name="user" type="font-awesome" color="#318d8c" />
+              <Text style={styles.value}>
+                <Text style={{ fontWeight: "bold" }}> Nombre:</Text>
+                {houseData?.senderName ?? "No Disponible"}
+              </Text>
+            </View>
+            <View style={styles.row}>
+              <Icon name="building" type="font-awesome" color="#318d8c" />
+              <Text style={styles.value}>
+                <Text style={{ fontWeight: "bold" }}>Ciudad:</Text>
+                {houseData?.senderCity ?? "No Disponible"}
+              </Text>
+            </View>
+            <View style={styles.row}>
+              <Icon name="map-marker" type="font-awesome" color="#318d8c" />
+              <Text style={styles.value}>
+                <Text style={{ fontWeight: "bold" }}>Estado:</Text>{" "}
+                {houseData?.senderState ?? "No Disponible"}
+              </Text>
+            </View>
+            <View style={styles.row}>
+              <Icon name="flag-circle" type="materialicons" color="#318d8c" />
+              <Text style={styles.value}>
+                <Text style={{ fontWeight: "bold" }}>País:</Text>{" "}
+                {houseData?.senderCountry ?? "No Disponible"}
+              </Text>
+            </View>
+          </Card>
+          <Card containerStyle={styles.card}>
+            <Card.Title style={{ color: "#318d8c" }}>Destinatario</Card.Title>
+            <Card.Divider />
+            <View style={styles.row}>
+              <Icon name="user" type="font-awesome" color="#318d8c" />
+              <Text style={styles.value}>
+                {" "}
+                <Text style={{ fontWeight: "bold" }}> Nombre:</Text>
+                {houseData?.recipientName ?? "No Disponible"}
+              </Text>
+            </View>
+            <View style={styles.row}>
+              <Icon name="building" type="font-awesome" color="#318d8c" />
+              <Text style={styles.value}>
+                {" "}
+                <Text style={{ fontWeight: "bold" }}>Ciudad:</Text>
+                {houseData?.recipientCity ?? "No Disponible"}
+              </Text>
+            </View>
+            <View style={styles.row}>
+              <Icon name="map-marker" type="font-awesome" color="#318d8c" />
+              <Text style={styles.value}>
+                {"  "}
+                <Text style={{ fontWeight: "bold" }}>Estado:</Text>{" "}
+                {houseData?.recipientState ?? "No Disponible"}
+              </Text>
+            </View>
+            <View style={styles.row}>
+              <Icon name="flag-circle" type="materialicons" color="#318d8c" />
+              <Text style={styles.value}>
+                <Text style={{ fontWeight: "bold" }}>País:</Text>{" "}
+                {houseData?.recipientCountry ?? "No Disponible"}
+              </Text>
+            </View>
+          </Card>
+        </ScrollView>
       )}
     </View>
   );
@@ -162,37 +206,37 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: "200%",
     backgroundColor: "#fff",
   },
-  tableContainer: {
-    marginTop: 30,
-    flex: 1,
+  cardsContainer: {
+    alignItems: "center",
+    justifyContent: "center",
     padding: 10,
-    height: "100%",
+  },
+  card: {
+    width: "90%",
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   row: {
     flexDirection: "row",
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-  },
-  key: {
-    fontWeight: "800",
-    width: "50%",
-    color: "#31488d",
-      textAlign: "auto",
-    fontSize:15
+    alignItems: "center",
+    marginBottom: 5,
   },
   value: {
-    flex: 1,
-    width: "50%",
-      textAlign: "auto",
-    fontSize:15
-    
+    fontSize: 16,
+    marginLeft: 5,
   },
   errorText: {
     color: "red",
+    textAlign: "center",
+    marginTop: 20,
   },
   loaderContainer: {
     flex: 1,
@@ -216,45 +260,45 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalView: {
-    width: "92%",
-    height: "40%",
+    width: "90%",
+    height: "50%",
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
     alignItems: "center",
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
     justifyContent: "center",
-    alignContent: "center",
-    alignSelf: "center",
   },
   modalText: {
     marginBottom: 20,
     textAlign: "center",
-      fontSize: 22,
+    fontSize: 22,
     fontWeight: "bold",
-        color: "#214b6c",
-    justifyContent: "center",
+    color: "#214b6c",
   },
   input: {
-    height: 60,
+    height: 50,
     borderColor: "gray",
     borderWidth: 1,
+    width: "100%",
+    paddingHorizontal: 10,
+    marginBottom: 20,
+  },
+  searchButton: {
+    backgroundColor: "#318d8c",
+    borderRadius: 30,
+    marginVertical: 15,
+    width: "100%",
+  },
+  backButton: {
+    backgroundColor: "#d9534f",
     borderRadius: 50,
     width: "100%",
-    marginBottom: 15,
-    paddingLeft: 10,
-    fontSize: 17,
-    alignSelf: "center",
-    textAlign: "center",
-    fontWeight: "700",
   },
 });
 
