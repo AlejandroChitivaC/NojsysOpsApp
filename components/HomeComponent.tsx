@@ -16,6 +16,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../constants/Types";
 import StorageService from "@/app/services/storage/storageService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAuth } from "@/components/auth/AuthContext";
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 type Props = {
   navigation: HomeScreenNavigationProp;
@@ -36,7 +37,7 @@ const openLink = () => {
 const Home: React.FC<Props> = ({ navigation }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [currentOption, setCurrentOption] = useState("¿Necesita ayuda?");
-
+  const { token, handleLogout } = useAuth();
   useEffect(() => {
     AsyncStorage.clear();
     const interval = setInterval(() => {
@@ -76,7 +77,11 @@ const Home: React.FC<Props> = ({ navigation }) => {
           style={styles.card}
           onPress={() => navigation.navigate("HouseDetails")}
         >
-          <IconMaterialCE style={styles.icon} name="account-details" size={60} />
+          <IconMaterialCE
+            style={styles.icon}
+            name="account-details"
+            size={60}
+          />
           <Text style={styles.cardText}>Detalles Guía</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.card}>
@@ -101,10 +106,7 @@ const Home: React.FC<Props> = ({ navigation }) => {
           <TouchableOpacity style={styles.option} onPress={openLink}>
             <Text style={styles.optionText}>¿Necesita ayuda?</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.option}
-            onPress={() => Alert.alert("Cerrando sesión...")}
-          >
+          <TouchableOpacity style={styles.option} onPress={handleLogout}>
             <Text style={styles.optionText}>Cerrar Sesión</Text>
           </TouchableOpacity>
           <TouchableOpacity

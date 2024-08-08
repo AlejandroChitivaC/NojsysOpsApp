@@ -23,6 +23,7 @@ import { useNavigation } from "@react-navigation/native";
 import { HelloWave } from "../HelloWave";
 import { RootStackParamList } from "@/constants/Types";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { showAlert } from "@/app/services/alertService";
 const { EXPO_PUBLIC_CLIENT_ID, EXPO_PUBLIC_AUTH_URL } = process.env;
 
 WebBrowser.maybeCompleteAuthSession();
@@ -36,10 +37,11 @@ const Auth: React.FC = () => {
   const discovery = useAutoDiscovery(`${EXPO_PUBLIC_AUTH_URL}`);
   const redirectUri = makeRedirectUri({
     scheme: undefined,
-    path: "/signin-oidc",
+    path: "https://login.microsoftonline.com/common/oauth2/nativeclient",
   });
 
   const clientId = `${EXPO_PUBLIC_CLIENT_ID}`;
+  console.log(clientId);
 
   const [request, response, promptAsync] = useAuthRequest(
     {
@@ -65,10 +67,11 @@ const Auth: React.FC = () => {
           discovery
         ).then((res) => {
           setToken(res.accessToken);
-          Alert.alert(
-            "Autenticación exitosa",
-            "¡Has iniciado sesión correctamente!"
+          showAlert(
+            "Autenticación exitosa,¡Has iniciado sesión correctamente!",
+            "success"
           );
+          navigation.navigate("Home");
         });
       }
     });

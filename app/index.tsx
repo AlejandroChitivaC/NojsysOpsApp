@@ -9,6 +9,7 @@ import SearchMaster from "@/components/SearchMaster";
 import { AlertProvider, useAlert } from "@/components/AlertContext";
 import { setAlertFunction } from "@/app/services/alertService";
 import HouseDetails from "@/components/HouseDetails";
+import { AuthProvider } from "@/components/auth/AuthContext";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -20,38 +21,40 @@ const MainNavigator = () => {
   }, [showAlert]);
 
   return (
-    <Stack.Navigator initialRouteName="Home">
-      <Stack.Screen
-        name="Auth"
-        component={Auth}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Home"
-        component={Home}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="ScanHouses"
-        options={{ title: "Escanear Guía Hija"}}
-        component={ScanHouses}
-      />
-      <Stack.Screen
-        name="Preinspection"
-        options={{ title: "Preinspección por cajas"}}
-        component={Preinspection}
-      />
-      <Stack.Screen
-        name="SearchMaster"
-        options={{ title: "Buscar Master" }}
-        component={SearchMaster}
-      />
-      <Stack.Screen
-        name="HouseDetails"
-        options={{ title: "Detalles de la guía" }}
-        component={HouseDetails}
-      />
-    </Stack.Navigator>
+    <AuthProvider>
+      <Stack.Navigator initialRouteName="Auth">
+        <Stack.Screen
+          name="Auth"
+          component={Auth}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ScanHouses"
+          options={{ title: "Escanear Guía Hija" }}
+          component={ScanHouses}
+        />
+        <Stack.Screen
+          name="Preinspection"
+          options={{ title: "Preinspección por cajas" }}
+          component={Preinspection}
+        />
+        <Stack.Screen
+          name="SearchMaster"
+          options={{ title: "Buscar Master" }}
+          component={SearchMaster}
+        />
+        <Stack.Screen
+          name="HouseDetails"
+          options={{ title: "Detalles de la guía" }}
+          component={HouseDetails}
+        />
+      </Stack.Navigator>
+    </AuthProvider>
   );
 };
 
