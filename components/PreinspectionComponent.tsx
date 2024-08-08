@@ -93,9 +93,10 @@ const Preinspection: React.FC<Props> = ({ route, navigation }) => {
       setTimeout(() => {
         setLoading(false);
       }, 1600);
+
       setTimeout(() => {
-        if (tBoxesMissing === 0) {
-          showAlert("La máster está completada", "success");
+        if (tBoxesMissing == 0 && tBoxesStatusProcessed != 0) {
+          showAlert("La máster esta completa.", "success");
         }
       }, 1800);
     }
