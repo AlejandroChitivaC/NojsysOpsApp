@@ -603,6 +603,22 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
             <View style={styles.row}>
               <View style={styles.iconContainer}>
                 <Icon
+                  name="dropbox"
+                  type="entypo"
+                  color="#318d8c"
+                  style={styles.icon}
+                />
+              </View>
+              <View style={styles.textContainer}>
+                <Text style={styles.label}>Contenido:</Text>{" "}
+                <Text style={styles.value}>
+                  {houseData?.contents || "No Disponible"}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.row}>
+              <View style={styles.iconContainer}>
+                <Icon
                   name="message1"
                   type="antdesign"
                   color="#318d8c"
@@ -645,6 +661,38 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
                 <Text style={styles.label}>Estado:</Text>{" "}
                 <Text style={styles.value}>
                   {houseData?.statusDescription ?? "No Disponible"}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.row}>
+              <View style={styles.iconContainer}>
+                <Icon
+                  name="box"
+                  type="entypo"
+                  color="#318d8c"
+                  style={styles.icon}
+                />
+              </View>
+              <View style={styles.textContainer}>
+                <Text style={styles.label}>Piezas:</Text>{" "}
+                <Text style={styles.value}>
+                  {houseData?.pieces ?? "No Disponible"}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.row}>
+              <View style={styles.iconContainer}>
+                <Icon
+                  name="box-tissue"
+                  type="font-awesome-5"
+                  color="#318d8c"
+                  style={styles.icon}
+                />
+              </View>
+              <View style={styles.textContainer}>
+                <Text style={styles.label}>Piezas Entregadas:</Text>{" "}
+                <Text style={styles.value}>
+                  {houseData?.deliveredPieces ?? "No Disponible"}
                 </Text>
               </View>
             </View>
