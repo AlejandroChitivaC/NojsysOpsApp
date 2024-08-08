@@ -7,7 +7,6 @@ import { ApiResponse } from "../entities/ApiResponse";
 import useStore from "@/hooks/useGlobalStore";
 import { showAlert } from "./alertService";
 const { EXPO_PUBLIC_API_URL } = process.env;
-console.log(EXPO_PUBLIC_API_URL);
 type MasterDataItem = {
     item1: House[];
     item2: House[];

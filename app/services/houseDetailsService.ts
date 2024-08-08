@@ -4,7 +4,6 @@ import { ApiResponse } from '@/app/entities/ApiResponse';
 import { HouseDetail } from '@/app/entities/HouseDetail';
 const { EXPO_PUBLIC_API_URL } = process.env;
 export const fetchHouseDetails = async (houseNo: string): Promise<HouseDetail | null> => {
-    console.log(EXPO_PUBLIC_API_URL);
     try {
         const response = await axios.get<ApiResponse<HouseDetail>>(`${EXPO_PUBLIC_API_URL}/houses/details/${houseNo}`);
         if (response.data.isValid && response.data.dataSingle) {

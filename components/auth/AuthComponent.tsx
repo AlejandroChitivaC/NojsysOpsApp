@@ -34,8 +34,6 @@ const Auth: React.FC = () => {
   const [token, setToken] = React.useState<string | null>(null);
 
   const discovery = useAutoDiscovery(`${EXPO_PUBLIC_AUTH_URL}`);
-  console.log("AUTH_URL:", EXPO_PUBLIC_AUTH_URL);
-  console.log("CLIENT_ID:", EXPO_PUBLIC_CLIENT_ID);
   const redirectUri = makeRedirectUri({
     scheme: undefined,
     path: "/signin-oidc",
@@ -66,7 +64,6 @@ const Auth: React.FC = () => {
           },
           discovery
         ).then((res) => {
-          console.log(res);
           setToken(res.accessToken);
           Alert.alert(
             "Autenticación exitosa",

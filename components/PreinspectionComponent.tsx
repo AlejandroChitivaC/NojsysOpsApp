@@ -15,6 +15,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@/constants/Types";
 import { House } from "@/app/entities/House";
 import useStore from "@/hooks/useGlobalStore";
+import { showAlert } from "@/app/services/alertService";
 
 type PreInspectionNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -86,13 +87,17 @@ const Preinspection: React.FC<Props> = ({ route, navigation }) => {
           item2.filter((item: { statusId: number }) => item.statusId === 2)
             .length
         );
-
         setIsFirstLoad(false);
       }
 
       setTimeout(() => {
         setLoading(false);
       }, 1600);
+      setTimeout(() => {
+        if (tBoxesMissing === 0) {
+          showAlert("La máster está completada", "success");
+        }
+      }, 1800);
     }
   }, [
     item1,
