@@ -16,7 +16,6 @@ import {
   TouchableOpacity,
   Alert,
   Dimensions,
-  SafeAreaView,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
@@ -24,25 +23,27 @@ import { HelloWave } from "../HelloWave";
 import { RootStackParamList } from "@/constants/Types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { showAlert } from "@/app/services/alertService";
-const { EXPO_PUBLIC_CLIENT_ID, EXPO_PUBLIC_AUTH_URL } = process.env;
 
+// Completa la sesión de autenticación si es necesario
 WebBrowser.maybeCompleteAuthSession();
 
+// Define el tipo de navegación
 type AuthScreenNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
 
 const Auth: React.FC = () => {
   const navigation = useNavigation<AuthScreenNavigationProp>();
   const [token, setToken] = React.useState<string | null>(null);
 
-  const discovery = useAutoDiscovery(`${EXPO_PUBLIC_AUTH_URL}`);
+  // Descubre automáticamente la configuración de OAuth
+  const discovery = useAutoDiscovery(`${process.env.EXPO_PUBLIC_AUTH_URL}`);
+  
+  // Configura la URI de redirección
   const redirectUri = makeRedirectUri({
     scheme: undefined,
     path: "https://login.microsoftonline.com/common/oauth2/nativeclient",
   });
 
-  const clientId = `${EXPO_PUBLIC_CLIENT_ID}`;
-  console.log(clientId);
-
+  const clientId = `${process.env.EXPO_PUBLIC_CLIENT_ID}`;
   const [request, response, promptAsync] = useAuthRequest(
     {
       clientId,
@@ -52,10 +53,12 @@ const Auth: React.FC = () => {
     discovery
   );
 
-  const handleLogin = () => {
-    promptAsync().then((codeResponse) => {
+  // Maneja el login
+  const handleLogin = async () => {
+    try {
+      const codeResponse = await promptAsync();
       if (request && codeResponse?.type === "success" && discovery) {
-        exchangeCodeAsync(
+        const tokenResponse = await exchangeCodeAsync(
           {
             clientId,
             code: codeResponse.params.code,
@@ -65,18 +68,23 @@ const Auth: React.FC = () => {
             redirectUri,
           },
           discovery
-        ).then((res) => {
-          setToken(res.accessToken);
-          showAlert(
-            "Autenticación exitosa,¡Has iniciado sesión correctamente!",
-            "success"
-          );
-          navigation.navigate("Home");
-        });
+        );
+        setToken(tokenResponse.accessToken);
+        showAlert(
+          "Autenticación exitosa, ¡Has iniciado sesión correctamente!",
+          "success"
+        );
+        navigation.navigate("Home");
+      } else {
+        showAlert("Error en la autenticación", "error");
       }
-    });
+    } catch (error) {
+      console.error("Login error:", error);
+      showAlert("Ha ocurrido un error durante la autenticación", "error");
+    }
   };
 
+  // Animaciones para el fade-in
   const fadeIn = React.useRef(new Animated.Value(0)).current;
   const logoOpacity = React.useRef(new Animated.Value(0)).current;
 
@@ -156,9 +164,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  safeArea: {
-    flex: 1,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
