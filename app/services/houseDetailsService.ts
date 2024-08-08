@@ -3,7 +3,6 @@ import { showAlert } from './alertService';
 import { ApiResponse } from '@/app/entities/ApiResponse';
 import { HouseDetail } from '@/app/entities/HouseDetail';
 const { EXPO_PUBLIC_API_URL } = process.env;
-// const API_URL = "https://nojsysweb-development.azurewebsites.net/api/Preinspection/houses/details";
 export const fetchHouseDetails = async (houseNo: string): Promise<HouseDetail | null> => {
     console.log(EXPO_PUBLIC_API_URL);
     try {
