@@ -40,7 +40,7 @@ const Auth: React.FC = () => {
   // Configura la URI de redirección
   const redirectUri = makeRedirectUri({
     scheme: "myapp",
-    path: "https://login.microsoftonline.com/common/oauth2/nativeclient",
+    path: "auth",
   });
 
   const clientId = `${process.env.EXPO_PUBLIC_CLIENT_ID}`;
