@@ -119,7 +119,7 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
         <ScrollView contentContainerStyle={styles.cardsContainer}>
           {/* Card House Data */}
           <Card containerStyle={styles.card}>
-            <Card.Title style={styles.cardTitle}>
+            <Card.Title style={styles.cardTitle} selectable={true}>
               {houseData?.houseNo}
             </Card.Title>
             <Card.Divider />
@@ -133,8 +133,10 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
                 />
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.label}>Master:</Text>
-                <Text style={styles.value}>
+                <Text style={styles.label} selectable={true}>
+                  Master:
+                </Text>
+                <Text style={styles.value} selectable={true}>
                   {houseData?.masterNumber ?? "No Disponible"}
                 </Text>
               </View>
@@ -149,8 +151,10 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
                 />
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.label}>Cliente:</Text>
-                <Text style={styles.value}>
+                <Text style={styles.label} selectable={true}>
+                  Cliente:
+                </Text>
+                <Text style={styles.value} selectable={true}>
                   {houseData?.masterClientName ?? "No Disponible"}
                 </Text>
               </View>
@@ -165,8 +169,10 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
                 />
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.label}>Contenido:</Text>
-                <Text style={styles.value}>
+                <Text style={styles.label} selectable={true}>
+                  Contenido:
+                </Text>
+                <Text style={styles.value} selectable={true}>
                   {houseData?.contents || "No Disponible"}
                 </Text>
               </View>
@@ -181,8 +187,10 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
                 />
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.label}>Comentarios:</Text>
-                <Text style={styles.value}>
+                <Text style={styles.label} selectable={true}>
+                  Comentarios:
+                </Text>
+                <Text style={styles.value} selectable={true}>
                   {houseData?.comments || "No Disponible"}
                 </Text>
               </View>
@@ -197,8 +205,10 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
                 />
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.label}>Rejuste:</Text>
-                <Text style={styles.value}>
+                <Text style={styles.label} selectable={true}>
+                  Rejuste:
+                </Text>
+                <Text style={styles.value} selectable={true}>
                   {houseData?.readjustmentDescription ?? "No Disponible"}
                 </Text>
               </View>
@@ -213,8 +223,10 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
                 />
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.label}>Estado:</Text>
-                <Text style={styles.value}>
+                <Text style={styles.label} selectable={true}>
+                  Estado:
+                </Text>
+                <Text style={styles.value} selectable={true}>
                   {houseData?.statusDescription ?? "No Disponible"}
                 </Text>
               </View>
@@ -229,8 +241,10 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
                 />
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.label}>Piezas:</Text>
-                <Text style={styles.value}>
+                <Text style={styles.label} selectable={true}>
+                  Piezas:
+                </Text>
+                <Text style={styles.value} selectable={true}>
                   {houseData?.pieces ?? "No Disponible"}
                 </Text>
               </View>
@@ -245,8 +259,10 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
                 />
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.label}>Piezas Entregadas:</Text>
-                <Text style={styles.value}>
+                <Text style={styles.label} selectable={true}>
+                  Piezas Entregadas:
+                </Text>
+                <Text style={styles.value} selectable={true}>
                   {houseData?.deliveredPieces ?? "No Disponible"}
                 </Text>
               </View>
@@ -266,8 +282,10 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
                 />
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.label}>Nombre:</Text>
-                <Text style={styles.value}>
+                <Text style={styles.label} selectable={true}>
+                  Nombre:
+                </Text>
+                <Text style={styles.value} selectable={true}>
                   {houseData?.senderName ?? "No Disponible"}
                 </Text>
               </View>
@@ -282,8 +300,10 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
                 />
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.label}>Ciudad:</Text>
-                <Text style={styles.value}>
+                <Text style={styles.label} selectable={true}>
+                  Ciudad:
+                </Text>
+                <Text style={styles.value} selectable={true}>
                   {houseData?.senderCity ?? "No Disponible"}
                 </Text>
               </View>
@@ -298,8 +318,10 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
                 />
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.label}>Estado:</Text>
-                <Text style={styles.value}>
+                <Text style={styles.label} selectable={true}>
+                  Estado:
+                </Text>
+                <Text style={styles.value} selectable={true}>
                   {houseData?.senderState ?? "No Disponible"}
                 </Text>
               </View>
@@ -314,8 +336,10 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
                 />
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.label}>País:</Text>
-                <Text style={styles.value}>
+                <Text style={styles.label} selectable={true}>
+                  País:
+                </Text>
+                <Text style={styles.value} selectable={true}>
                   {houseData?.senderCountry ?? "No Disponible"}
                 </Text>
               </View>
@@ -335,8 +359,10 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
                 />
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.label}>Nombre:</Text>
-                <Text style={styles.value}>
+                <Text style={styles.label} selectable={true}>
+                  Nombre:
+                </Text>
+                <Text style={styles.value} selectable={true}>
                   {houseData?.recipientName ?? "No Disponible"}
                 </Text>
               </View>
@@ -351,8 +377,10 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
                 />
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.label}>Ciudad:</Text>
-                <Text style={styles.value}>
+                <Text style={styles.label} selectable={true}>
+                  Ciudad:
+                </Text>
+                <Text style={styles.value} selectable={true}>
                   {houseData?.recipientCity ?? "No Disponible"}
                 </Text>
               </View>
@@ -367,8 +395,10 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
                 />
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.label}>Estado:</Text>
-                <Text style={styles.value}>
+                <Text style={styles.label} selectable={true}>
+                  Estado:
+                </Text>
+                <Text style={styles.value} selectable={true}>
                   {houseData?.recipientState ?? "No Disponible"}
                 </Text>
               </View>
@@ -383,8 +413,10 @@ const HouseDetails: React.FC<Props> = ({ route, navigation }) => {
                 />
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.label}>País:</Text>
-                <Text style={styles.value}>
+                <Text style={styles.label} selectable={true}>
+                  País:
+                </Text>
+                <Text style={styles.value} selectable={true}>
                   {houseData?.recipientCountry ?? "No Disponible"}
                 </Text>
               </View>
@@ -432,7 +464,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 20,
     color: "#333",
-    fontWeight:"800"
+    fontWeight: "800",
   },
   input: {
     height: 50,
@@ -441,7 +473,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: 250,
     paddingHorizontal: 10,
-    borderRadius:10
+    borderRadius: 10,
   },
   searchButton: {
     backgroundColor: "#318d8c",
