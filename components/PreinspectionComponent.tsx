@@ -131,7 +131,7 @@ const Preinspection: React.FC<Props> = ({ route, navigation }) => {
   if (loading) {
     return (
       <ImageBackground
-        source={require("@/assets/images/peak_background.jpg")}
+        source={require("@/assets/images/loader_bg.jpg")}
         style={[styles.loaderContainer, styles.background]}
       >
         <Wave size={100} color="#214b6c" animating={true} />
@@ -143,7 +143,7 @@ const Preinspection: React.FC<Props> = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <Image
-        source={require("@/assets/images/peak_background.jpg")}
+        source={require("@/assets/images/loader_bg.jpg")}
         style={styles.background}
       />
       <Text style={styles.label}>Escanear Guías</Text>
