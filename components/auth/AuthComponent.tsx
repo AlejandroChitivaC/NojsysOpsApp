@@ -106,7 +106,7 @@ const Auth: React.FC = () => {
 
   return (
     <ImageBackground
-      source={require("@/assets/images/giphy.webp")}
+      source={require("@/assets/images/peak_background.png")}
       style={styles.background}
       resizeMode="cover"
     >
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.2)",
+    backgroundColor: "rgba(0, 0, 0, 0.0)",
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
