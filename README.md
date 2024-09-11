@@ -97,7 +97,7 @@ POST /api/Preinspection/update/${houseNo}
 
 ## 2. Backend
 
-- **REST APIs**: For communication with backend servers. This can be built with Node.js, Django, Ruby on Rails, etc.
+- **REST APIs**: For communication with backend servers. This can be built with Node.js, Django, Ruby on Rails, etc. For this case is built in .NET stack
 
 - **Authentication and Authorization**: MSAL Authentication
 
