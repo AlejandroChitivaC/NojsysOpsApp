@@ -10,7 +10,8 @@ import { AlertProvider, useAlert } from "@/components/AlertContext";
 import { setAlertFunction } from "@/app/services/alertService";
 import HouseDetails from "@/components/HouseDetails";
 import { AuthProvider } from "@/components/auth/AuthContext";
-
+import DispatchComponent from "@/components/DispatchComponent";
+import DispatchDetails from "@/components/DispatchDetails";
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const MainNavigator = () => {
@@ -53,6 +54,13 @@ const MainNavigator = () => {
           options={{ title: "Detalles de la guía" }}
           component={HouseDetails}
         />
+        <Stack.Screen
+          name="Dispatch"
+          options={{ title: "Despachos" }}
+          component={DispatchComponent}
+        />
+        <Stack.Screen name="DispatchDetails" component={DispatchDetails} />
+
       </Stack.Navigator>
     </AuthProvider>
   );

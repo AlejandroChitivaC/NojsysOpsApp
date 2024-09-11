@@ -15,4 +15,28 @@ export const flattenObject = (obj: any, prefix: string = ''): Array<[string, any
     }
 
     return result;
-  };
+};
+
+export const formatDate = (date: string) => {
+  const d = new Date(date);
+  const months = [
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre",
+    "Noviembre",
+    "Diciembre",
+  ];
+  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+};
+
+export const formatMasterNumber = (masterNumber: string | null) => {
+  if (!masterNumber) return "";
+  return masterNumber.replace(/<br>/g, "\n");
+};

@@ -1,3 +1,5 @@
+import { Dispatch } from "@/app/entities/Dispatch";
+
 export type RootStackParamList = {
   Home: undefined;
   ScanHouses: undefined;
@@ -5,4 +7,6 @@ export type RootStackParamList = {
   Preinspection: {data:any, houseNo?:any};
   SearchMaster: undefined;
   HouseDetails: undefined;
+  Dispatch: undefined;
+  DispatchDetails: { dispatch: Dispatch }; // Ajusta aquí
 };

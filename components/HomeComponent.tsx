@@ -84,7 +84,11 @@ const Home: React.FC<Props> = ({ navigation }) => {
           />
           <Text style={styles.cardText}>Detalles Guía</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.card}>
+        <TouchableOpacity
+          style={styles.card}
+          disabled
+          onPress={() => navigation.navigate("Dispatch")}
+        >
           <IconMaterialCE
             style={styles.icon}
             name="truck-fast-outline"
