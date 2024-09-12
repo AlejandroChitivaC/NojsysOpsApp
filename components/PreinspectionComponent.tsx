@@ -6,8 +6,9 @@ import {
   Image,
   Animated,
   ImageBackground,
+  ScrollView,
 } from "react-native";
-import { Button, Card } from "@rneui/base";
+import { Card, Input } from "@rneui/base";
 import IconFA5 from "react-native-vector-icons/FontAwesome5";
 import IconMaterialCE from "react-native-vector-icons/MaterialCommunityIcons";
 import { Wave } from "react-native-animated-spinkit";
@@ -16,6 +17,9 @@ import { RootStackParamList } from "@/constants/Types";
 import { House } from "@/app/entities/House";
 import useStore from "@/hooks/useGlobalStore";
 import { showAlert } from "@/app/services/alertService";
+import StorageService from "@/app/services/storage/storageService";
+import { useNavigation } from "@react-navigation/native";
+import { MasterDataItem, validateBox } from "@/app/services/masterService";
 
 type PreInspectionNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -33,8 +37,51 @@ const Preinspection: React.FC<Props> = ({ route, navigation }) => {
   const [opacity] = useState(new Animated.Value(1));
   const [loading, setLoading] = useState(true);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [inputValue, setInputValue] = useState("");
+  const [scanning, setScanning] = useState(true);
 
-  // Call useStore at the top level
+  const handleInputChange = (value: string) => {
+    setInputValue(value);
+
+    if (value.trim()) {
+      handleSubmit(value);
+    }
+  };
+
+  const handleSubmit = async (value: string) => {
+    if (!scanning || !value.trim()) return; 
+
+    setScanning(false);
+    let data = value.toUpperCase();
+
+    try {
+      await StorageService.setStringItem("houseNo", data);
+      let masterData = await StorageService.getItem<MasterDataItem>("masterData");
+      let scannedHouse = await StorageService.getStringItem("houseNo");
+
+      if (scannedHouse != null) {
+        navigation.navigate("Preinspection", {
+          data: masterData,
+          houseNo: scannedHouse,
+        });
+
+        validateBox(scannedHouse); 
+
+        setInputValue("");
+
+        setLoading(true);
+        setTimeout(() => {
+          setLoading(false);
+        }, 100); 
+      }
+    } catch (e) {
+      console.error("Error retrieving data:", e);
+    }
+
+    setTimeout(() => setScanning(true), 1500);
+  };
+
+  
   const {
     tBoxes,
     tBoxesOutline,
@@ -63,7 +110,7 @@ const Preinspection: React.FC<Props> = ({ route, navigation }) => {
   useEffect(() => {
     if (item1.length > 0) {
       if (isFirstLoad) {
-        // Update Zustand store values
+
         setTBoxes(item1.length);
         setTBoxesOutline(
           item1.filter((item: { toOutline: any }) => item.toOutline).length
@@ -92,7 +139,7 @@ const Preinspection: React.FC<Props> = ({ route, navigation }) => {
 
       setTimeout(() => {
         setLoading(false);
-      }, 1600);
+      }, 150);
 
       setTimeout(() => {
         if (tBoxesMissing == 0 && tBoxesStatusProcessed != 0) {
@@ -113,21 +160,6 @@ const Preinspection: React.FC<Props> = ({ route, navigation }) => {
     setTHousesInOutline,
   ]);
 
-  const redirectToScan = () => {
-    Animated.timing(opacity, {
-      toValue: 0.5,
-      duration: 300,
-      useNativeDriver: true,
-    }).start(() => {
-      navigation.navigate("ScanHouses");
-      Animated.timing(opacity, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    });
-  };
-
   if (loading) {
     return (
       <ImageBackground
@@ -139,92 +171,80 @@ const Preinspection: React.FC<Props> = ({ route, navigation }) => {
     );
   }
 
-  // Use Zustand store values for display
   return (
-    <View style={styles.container}>
-      <Image
-        source={require("@/assets/images/loader_bg.jpg")}
-        style={styles.background}
-      />
-      <Text style={styles.label}>Escanear Guías</Text>
-      <View style={styles.inputContainer}>
-        <Button
-          title="Escanear"
-          onPress={redirectToScan}
-          icon={{
-            name: "qr-code-scanner",
-            type: "material-icons",
-            size: 50,
-            color: "white",
-          }}
-          iconContainerStyle={{ marginRight: 10 }}
-          titleStyle={{ fontWeight: "800" }}
-          buttonStyle={{
-            backgroundColor: "#318D8C",
-            borderColor: "transparent",
-            borderWidth: 0,
-            borderRadius: 100,
-          }}
-          containerStyle={{
-            width: 250,
-          }}
+    <ScrollView>
+      <View style={styles.container}>
+        <Image
+          source={require("@/assets/images/loader_bg.jpg")}
+          style={styles.background}
         />
+        <Text style={styles.label}>Escanear Guías</Text>
+        <View style={styles.inputContainer}>
+          <Input
+            placeholder="# Guía"
+            rightIcon={{ type: "font-awesome", name: "qrcode" ,color: "#318D8C" ,size: 30}}
+            inputStyle={{ textAlign: "center" }}
+            value={inputValue}
+            autoFocus
+            onChangeText={handleInputChange} 
+          />
+        </View>
+        <Card containerStyle={styles.card1}>
+          <View style={styles.cardRow3}>
+            <View style={styles.cardSection}>
+              <Text style={styles.cardNumber}>{tBoxes}</Text>
+              <IconFA5 name="box" color={"#FFFF"} size={30} />
+              <Text style={styles.cardLabel}>Total cajas</Text>
+            </View>
+            <View style={styles.cardSection}>
+              <Text style={styles.cardNumber}>{tBoxesOutline}</Text>
+              <IconFA5 name="box-open" color={"#FFFF"} size={30} />
+              <Text style={styles.cardLabel}>Cajas para perfilar</Text>
+            </View>
+            <View style={styles.cardSection}>
+              <Text style={styles.cardNumber}>{tHousesToOutline}</Text>
+              <IconFA5 name="inbox" color={"#FFFF"} size={30} />
+              <Text style={styles.cardLabel}>Guías perfiladas</Text>
+            </View>
+          </View>
+        </Card>
+
+        <Card containerStyle={styles.card2}>
+          <View style={styles.cardRow3}>
+            <View style={styles.cardSection}>
+              <Text style={styles.cardNumber}>{tBoxesStatusProcessed}</Text>
+              <IconFA5 name="box" color={"#FFFF"} size={30} />
+              <Text style={styles.cardLabel}>Cajas procesadas</Text>
+            </View>
+            <View style={styles.cardSection}>
+              <Text style={styles.cardNumber}>{tBoxesStatusOutline}</Text>
+              <IconFA5 name="box-open" color={"#FFFF"} size={30} />
+              <Text style={styles.cardLabel}>Cajas en inspección</Text>
+            </View>
+            <View style={styles.cardSection}>
+              <Text style={styles.cardNumber}>{tHousesInOutline}</Text>
+              <IconFA5 name="inbox" color={"#FFFF"} size={30} />
+              <Text style={styles.cardLabel}>Guías en inspección</Text>
+            </View>
+          </View>
+        </Card>
+
+        <Card containerStyle={styles.card3}>
+          <View style={styles.cardRow2}>
+            <View style={styles.cardSection}>
+              <Text style={styles.cardNumber}>{tBoxesMissing}</Text>
+              <IconMaterialCE name="lightbulb-on" color={"#FFFF"} size={30} />
+              <Text style={styles.cardLabel}>Cajas faltantes</Text>
+            </View>
+            <View style={styles.cardSection}>
+              <Text style={styles.cardNumber}>{"-"}</Text>
+              <IconMaterialCE name="printer-check" color={"#FFFF"} size={40} />
+              <Text style={styles.cardLabel}>Guías para perfilar</Text>
+            </View>
+          </View>
+        </Card>
       </View>
-      <Card containerStyle={styles.card1}>
-        <View style={styles.cardRow3}>
-          <View style={styles.cardSection}>
-            <Text style={styles.cardNumber}>{tBoxes}</Text>
-            <IconFA5 name="box" color={"#FFFF"} size={30} />
-            <Text style={styles.cardLabel}>Total cajas</Text>
-          </View>
-          <View style={styles.cardSection}>
-            <Text style={styles.cardNumber}>{tBoxesOutline}</Text>
-            <IconFA5 name="box-open" color={"#FFFF"} size={30} />
-            <Text style={styles.cardLabel}>Cajas para perfilar</Text>
-          </View>
-          <View style={styles.cardSection}>
-            <Text style={styles.cardNumber}>{tHousesToOutline}</Text>
-            <IconFA5 name="inbox" color={"#FFFF"} size={30} />
-            <Text style={styles.cardLabel}>Guías perfiladas</Text>
-          </View>
-        </View>
-      </Card>
-
-      <Card containerStyle={styles.card2}>
-        <View style={styles.cardRow3}>
-          <View style={styles.cardSection}>
-            <Text style={styles.cardNumber}>{tBoxesStatusProcessed}</Text>
-            <IconFA5 name="box" color={"#FFFF"} size={30} />
-            <Text style={styles.cardLabel}>Cajas procesadas</Text>
-          </View>
-          <View style={styles.cardSection}>
-            <Text style={styles.cardNumber}>{tBoxesStatusOutline}</Text>
-            <IconFA5 name="box-open" color={"#FFFF"} size={30} />
-            <Text style={styles.cardLabel}>Cajas en inspección</Text>
-          </View>
-          <View style={styles.cardSection}>
-            <Text style={styles.cardNumber}>{tHousesInOutline}</Text>
-            <IconFA5 name="inbox" color={"#FFFF"} size={30} />
-            <Text style={styles.cardLabel}>Guías en inspección</Text>
-          </View>
-        </View>
-      </Card>
-
-      <Card containerStyle={styles.card3}>
-        <View style={styles.cardRow2}>
-          <View style={styles.cardSection}>
-            <Text style={styles.cardNumber}>{tBoxesMissing}</Text>
-            <IconMaterialCE name="lightbulb-on" color={"#FFFF"} size={30} />
-            <Text style={styles.cardLabel}>Cajas faltantes</Text>
-          </View>
-          <View style={styles.cardSection}>
-            <Text style={styles.cardNumber}>{"-"}</Text>
-            <IconMaterialCE name="printer-check" color={"#FFFF"} size={40} />
-            <Text style={styles.cardLabel}>Guías para perfilar</Text>
-          </View>
-        </View>
-      </Card>
-    </View>
+    </ScrollView>
   );
 };
 

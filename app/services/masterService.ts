@@ -7,7 +7,7 @@ import { ApiResponse } from "../entities/ApiResponse";
 import useStore from "@/hooks/useGlobalStore";
 import { showAlert } from "./alertService";
 const { EXPO_PUBLIC_API_URL } = process.env;
-type MasterDataItem = {
+export type MasterDataItem = {
     item1: House[];
     item2: House[];
 };
@@ -141,10 +141,10 @@ export const validateBox = async (inputValue: string): Promise<boolean> => {
     const { setTBoxes, setTBoxesOutline, setTBoxesStatusProcessed, setTBoxesStatusOutline, setTBoxesMissing, setTHousesToOutline, setTHousesInOutline } = useStore.getState();
     if (inputValue !== "") {
         let totalItems = arraytProcessed.concat(arraytToOutline);
-        let processed = totalItems.find(item => item.houseNo.toUpperCase() == inputValue);
+        let processed = totalItems.find(item => item.houseNo == inputValue);
         if (processed == undefined) {
 
-            let matchingElement = arrayBoxes?.find(item => item.houseNo.toUpperCase() == inputValue);
+            let matchingElement = arrayBoxes?.find(item => item.houseNo == inputValue);
 
             if (matchingElement != undefined) {
                 if (matchingElement.statusId === 2 || matchingElement.statusId === 1) {

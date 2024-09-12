@@ -3,12 +3,12 @@ import { showAlert } from './alertService';
 import { ApiResponse } from '@/app/entities/ApiResponse';
 import { Dispatch } from '@/app/entities/Dispatch'; // Asegúrate de que esta ruta y nombre sean correctos
 
-const { EXPO_PUBLIC_API_URL } = process.env;
+const { EXPO_PUBLIC_API_URL_DISPATCH } = process.env;
 
 export const fetchOpenDispatch = async (): Promise<Dispatch[] | null> => {
     try {
-        // const response = await axios.get<ApiResponse<Dispatch[]>>(`${EXPO_PUBLIC_API_URL}/dispatch/open`);
-        const response = await axios.get<ApiResponse<Dispatch[]>>("https://localhost:44329/api/Dispatch/dispatchs");
+        const response = await axios.get<ApiResponse<Dispatch[]>>(`${EXPO_PUBLIC_API_URL_DISPATCH}/dispatchS`);
+        // const response = await axios.get<ApiResponse<Dispatch[]>>("https://localhost:44329/api/Dispatch/dispatchs");
         console.log(response);
         if (response.data.isValid && response.data.dataSingle) {
             console.log(response.data.dataSingle);
