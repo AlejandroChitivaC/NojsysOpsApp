@@ -22,7 +22,7 @@ const MainNavigator = () => {
 
   return (
     <AuthProvider>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName="Auth">
         <Stack.Screen
           name="Auth"
           component={Auth}
