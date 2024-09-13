@@ -107,3 +107,23 @@ POST /api/Preinspection/update/${houseNo}
 - **Visual Studio Code**
 - **Git**
 - **EAS (Expo Application Services)**: For automated builds and deployments. **(Account required)**
+
+# Environment Variables
+
+To ensure the app works correctly, it is necessary to have a `.env` file containing the required environment variables, such as the tenant ID and API URLs. These variables are essential for connecting to the backend and external services.
+
+### Example `.env` file:
+
+```env
+EXPO_PUBLIC_API_URL=https://example.com.net
+EXPO_PUBLIC_API_URL_DISPATCH=https://example.com.net
+EXPO_PUBLIC_CLIENT_ID= your client id
+EXPO_PUBLIC_AUTH_URL=https://login.microsoftonline.com/tenant-id
+EXPO_PUBLIC_TENANT_ID=your tenant id
+```
+## Updating Environment Variables
+If you need to update or modify your .env file (e.g., if the API URL changes or you switch to a new tenant), you can push the updated secrets to EAS (Expo Application Services) using the following command:
+
+```
+eas secret:push --scope project --env-file ./eas/.env
+```
