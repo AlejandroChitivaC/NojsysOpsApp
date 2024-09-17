@@ -7,8 +7,8 @@ const { EXPO_PUBLIC_API_URL_DISPATCH } = process.env;
 
 export const fetchOpenDispatch = async (): Promise<Dispatch[] | null> => {
     try {
-        const response = await axios.get<ApiResponse<Dispatch[]>>(`${EXPO_PUBLIC_API_URL_DISPATCH}/dispatchS`);
-        // const response = await axios.get<ApiResponse<Dispatch[]>>("https://localhost:44329/api/Dispatch/dispatchs");
+        const response = await axios.get<ApiResponse<Dispatch[]>>(`${EXPO_PUBLIC_API_URL_DISPATCH}/dispatchs`);
+        // const response = await axios.get<ApiReResponse<Dispatch[]>>("https://localhost:44329/api/Dispatch/dispatchs");
         console.log(response);
         if (response.data.isValid && response.data.dataSingle) {
             console.log(response.data.dataSingle);
